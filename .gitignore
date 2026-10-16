@@ -1,0 +1,10 @@
+.DS_Store
+Thumbs.db
+db.json
+*.log
+node_modules
+dist
+.minista
+
+# Local working notes
+/docs/temp/
