@@ -1,9 +1,33 @@
-<!-- minista:agents:start -->
+# reddit-exdata-viewer
+
+## Стек
+
+- Minista, React, TypeScript и pnpm.
+- Обычный CSS, CSS Modules и `@a1rth/css-normalize`; без UI-библиотек.
+
+## Работа
+
+- Работать небольшими согласованными шагами; перед правками читать существующие техдоки области, проверять `git status` и diff.
+- Сохранять изменения разработчика и stash. Зависимости, каталоги и абстракции добавлять по реальной потребности.
+- Новые React-подходы объяснять с учётом опыта Vue 3. Пользовательские сообщения и необходимые комментарии писать по-русски.
+- Документы описывают текущее состояние; README оставлять минимальным.
+- Личные выгрузки читать только в явно разрешённом объёме, не изменять, не выводить в контекст и не публиковать. Для разработки использовать искусственные данные.
+
+## Проверки
+
+- Код: `pnpm type-check`, `pnpm lint`, `pnpm format:check`. При изменениях сборки, зависимостей или подключения ресурсов дополнительно проверять build, dev и preview. Интерактивность проверять в браузере.
+- Документы: diff и согласованность. В отчёте различать сборку, HTTP и проверку в браузере; отмечать непроверенное.
+
+## Git
+
+- Работать в `dev`; Git-операции, меняющие ветки, индекс, историю или удалённый репозиторий, выполнять только по прямому поручению. Версию менять при подготовке выпуска.
+- Один коммит — одна задача. Conventional Commits: type/scope латиницей, описание по-русски, со строчной буквы, как завершённое действие. Сообщения предлагать по запросу.
+- Scope выбирать по основной цели задачи: `deps` — зависимости, `ui` — интерфейс, `data` — обработка данных. Новые scope согласовывать.
+- Для инструментов и конфигурации использовать тип `build` без scope.
+- Для документации использовать тип `docs`: без scope для документации по проекту в целом; со scope, если документ посвящён конкретной области.
 
 ## minista
 
-- For minista API, routing, rendering, or build questions, consult the installed guide with `npx --no-install minista agents`.
-- When locating generated metadata, use `npx --no-install minista agents --json`; use `inspect --manifest --json` for the last build, or `check --json` / `inspect --json` for current source analysis.
-- Generated metadata may be stale. Do not edit generated workspace files manually.
-
-<!-- minista:agents:end -->
+- По вопросам API Minista, маршрутизации, рендеринга и сборки обращаться к установленному руководству: `npx --no-install minista agents`.
+- Для поиска сгенерированных метаданных использовать `npx --no-install minista agents --json`. Последнюю сборку проверять через `npx --no-install minista inspect --manifest --json`, текущие исходники — через `npx --no-install minista check --json` или `npx --no-install minista inspect --json`.
+- Сгенерированные метаданные могут быть устаревшими. Не редактировать сгенерированные служебные файлы вручную.
