@@ -1,0 +1,41 @@
+.page {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100svh;
+}
+
+.header,
+.main,
+.footer {
+  padding-block: var(--space-section);
+}
+
+.header {
+  background-color: var(--color-header);
+}
+
+.main {
+  display: grid;
+  align-items: center;
+  background-color: var(--color-main);
+}
+
+.footer {
+  background-color: var(--color-footer);
+}
+
+.container {
+  width: min(100%, var(--content-width));
+  margin-inline: auto;
+  padding-inline: var(--space-gutter);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.15;
+}
+
+.description {
+  margin: var(--space-text) 0 0;
+}

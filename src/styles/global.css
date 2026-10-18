@@ -1,0 +1,21 @@
+@import '@a1rth/css-normalize';
+
+:root {
+  --font-body: system-ui, sans-serif;
+  --color-text: #263047;
+  --color-page: #fff0d9;
+  --color-header: #d9dcff;
+  --color-main: #fff0d9;
+  --color-footer: #d7f1e6;
+  --content-width: 72rem;
+  --space-gutter: clamp(1rem, 4vw, 2rem);
+  --space-section: 1.5rem;
+  --space-text: 0.75rem;
+}
+
+body {
+  font-family: var(--font-body);
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-page);
+}
