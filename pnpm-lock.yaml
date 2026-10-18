@@ -166,6 +166,9 @@ importers:
 
   .:
     devDependencies:
+      '@a1rth/css-normalize':
+        specifier: 1.2.4
+        version: 1.2.4
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.13.0)
@@ -204,6 +207,9 @@ importers:
         version: 8.3.4(@types/node@26.6.5)(yaml@2.9.1)
 
 packages:
+
+  '@a1rth/css-normalize@1.2.4':
+    resolution: {integrity: sha512-yX4zrit1XbGAF33qWRd3T0jCEBUjus9ojsoxW1f3SKVIpCpc3mCSyojWuo66373cu/EDVchzK3O5mzinfq7JAQ==}
 
   '@cacheable/memory@2.2.0':
     resolution: {integrity: sha512-CTLKqLItRCEixEAewD3/j9DB3/o96gpTPD4eJ1v+DGOlxZRZncRQkGYqqnAGCscYd6RNeXfGeiuCphsPtqyIfQ==}
@@ -1775,6 +1781,8 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
+
+  '@a1rth/css-normalize@1.2.4': {}
 
   '@cacheable/memory@2.2.0':
     dependencies:

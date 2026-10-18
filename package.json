@@ -18,6 +18,7 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@a1rth/css-normalize": "1.2.4",
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
