@@ -1,41 +1,197 @@
-.page {
+.banner {
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  min-height: 100svh;
+  place-items: center;
+  min-height: 200px;
+  margin-top: 16px;
+  background-color: var(--color-banner);
 }
 
-.header,
-.main,
-.footer {
-  padding-block: var(--space-section);
-}
-
-.header {
-  background-color: var(--color-header);
-}
-
-.main {
-  display: grid;
-  align-items: center;
-  background-color: var(--color-main);
-}
-
-.footer {
-  background-color: var(--color-footer);
+.bannerPlaceholder {
+  color: var(--color-banner-text);
+  font-size: 14px;
 }
 
 .container {
-  width: min(100%, var(--content-width));
+  width: 100%;
+  max-width: var(--content-width);
   margin-inline: auto;
-  padding-inline: var(--space-gutter);
+}
+
+.workspace {
+  display: grid;
+  grid-template-areas: 'main aside';
+  grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
+  align-items: start;
+  gap: var(--space-layout);
+  padding-block: 16px;
+}
+
+.main {
+  grid-area: main;
+  padding: 20px 16px 24px;
+  border-radius: var(--radius-panel);
+  color: var(--color-panel-text);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-panel);
 }
 
 .title {
-  margin: 0;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  line-height: 1.15;
+  padding: 6px 32px;
+  border-radius: 3px;
+  background-color: var(--color-heading);
+  font-size: 28px;
+  line-height: 1.4;
 }
 
-.description {
-  margin: var(--space-text) 0 0;
+.intro {
+  margin: 24px 48px;
+}
+
+.dropZone {
+  --drop-zone-radius: 18px;
+  --drop-zone-inset: 10px;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 352px;
+  margin-inline: 48px;
+  padding: 32px;
+  border-radius: var(--drop-zone-radius);
+  color: var(--color-text);
+  background-color: var(--color-surface-inset);
+  text-align: center;
+}
+
+.dropZone::before {
+  position: absolute;
+  inset: var(--drop-zone-inset);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: calc(var(--drop-zone-radius) - var(--drop-zone-inset));
+  pointer-events: none;
+  content: '';
+}
+
+.uploadTitle {
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+.uploadDescription {
+  margin-block: 8px 24px;
+}
+
+.uploadButton {
+  min-height: 48px;
+  padding: 12px 28px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+  font-weight: 700;
+}
+
+.localNote {
+  margin-top: 20px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.sidebar {
+  grid-area: aside;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 16px;
+}
+
+.sidebarPanel {
+  display: grid;
+  gap: 20px;
+  padding: 16px 8px;
+  border-radius: 8px;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-panel);
+}
+
+.themeControl {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-inline: 8px;
+  color: var(--color-panel-text);
+  font-size: 14px;
+}
+
+.themeButton {
+  flex: 0 0 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+  font-weight: 700;
+}
+
+.themeLight {
+  display: none;
+}
+
+:root[data-theme='dark'] .themeLight {
+  display: inline;
+}
+
+:root[data-theme='dark'] .themeDark {
+  display: none;
+}
+
+.menuHint {
+  color: var(--color-text);
+  font-size: 13px;
+  text-align: center;
+}
+
+.menu {
+  display: grid;
+  gap: 3px;
+}
+
+.menuButton {
+  display: block;
+  width: 100%;
+  height: 36px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 0;
+  color: var(--color-text-disabled);
+  background-color: var(--color-control-disabled);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.themeButton:disabled,
+.menuButton:disabled {
+  cursor: not-allowed;
+}
+
+.footer {
+  padding-bottom: 24px;
+  color: var(--color-text);
+  font-size: 12px;
+  text-align: center;
+}
+
+.footerDivider {
+  margin-inline: 10px;
+}
+
+.footerNote {
+  margin-top: 4px;
 }
