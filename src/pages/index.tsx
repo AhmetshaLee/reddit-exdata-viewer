@@ -1,5 +1,6 @@
 import { Head } from 'minista/head'
 
+import PostVotesReader from '../components/PostVotesReader'
 import '../styles/global.css'
 import styles from './index.module.css'
 
@@ -20,23 +21,7 @@ export default function HomePage() {
 
       <div className={`${styles.container} ${styles.workspace}`}>
         <main className={styles.main}>
-          <h1 className={styles.title}>Ваш архив Reddit</h1>
-          <p className={styles.intro}>
-            Откройте архив, чтобы просматривать свои данные в удобном виде
-          </p>
-
-          <section className={styles.dropZone} aria-labelledby="upload-title">
-            <h2 className={styles.uploadTitle} id="upload-title">
-              Перетащите архив сюда
-            </h2>
-            <p className={styles.uploadDescription}>
-              или выберите файл на компьютере
-            </p>
-            <button className={styles.uploadButton} type="button">
-              Выбрать архив
-            </button>
-          </section>
-
+          <PostVotesReader client:load />
           <p className={styles.localNote}>Данные не покидают ваше устройство</p>
         </main>
 
@@ -61,7 +46,7 @@ export default function HomePage() {
                   'Посты',
                   'Комментарии',
                   'Сообщения',
-                  'Голосования',
+                  'Оценки',
                   'Сохранённое',
                   'Аккаунт',
                   'Настройки',
@@ -71,8 +56,8 @@ export default function HomePage() {
                       className={styles.menuButton}
                       type="button"
                       aria-label={
-                        label === 'Голосования'
-                          ? 'Голосования: апвоуты и даунвоуты'
+                        label === 'Оценки'
+                          ? 'Оценки: нравится и не нравится'
                           : undefined
                       }
                       disabled
