@@ -1,0 +1,80 @@
+@import '@a1rth/css-normalize';
+
+:root {
+  color-scheme: light;
+
+  /* Типографика */
+  --font-body: Verdana, sans-serif;
+
+  /* Фон и поверхности */
+  --color-page: #d1d1dc;
+  --color-banner: #ababb5;
+  --color-surface: #4e4c58;
+  --color-heading: #696773;
+  --color-surface-inset: #e5e5ed;
+  --color-control-disabled: #dfdfe8;
+
+  /* Текст */
+  --color-text: #32323e;
+  --color-text-disabled: #83838e;
+  --color-banner-text: #454550;
+  --color-panel-text: #fafafd;
+  --color-on-accent: #ffffff;
+
+  /* Акценты и границы */
+  --color-accent: #696975;
+  --color-focus: #5e5e70;
+  --color-border-strong: #9696a3;
+
+  /* Тени */
+  --shadow-panel: 0 4px 12px rgb(48 48 60 / 7%);
+
+  /* Скругления */
+  --radius-panel: 12px;
+  --radius-control: 6px;
+
+  /* Макет и отступы */
+  --content-width: 980px;
+  --sidebar-width: 220px;
+  --space-layout: 20px;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Фон и поверхности */
+  --color-page: #4c4c58;
+  --color-banner: #676773;
+  --color-surface: #363641;
+  --color-heading: #696975;
+  --color-surface-inset: #4e4e59;
+  --color-control-disabled: #555560;
+
+  /* Текст */
+  --color-text: #f2f2f6;
+  --color-text-disabled: #a1a1ad;
+  --color-banner-text: #f1f1f5;
+
+  /* Акценты и границы */
+  --color-accent: #72727e;
+  --color-focus: #cccce0;
+  --color-border-strong: #8a8a99;
+
+  /* Тени */
+  --shadow-panel: 0 4px 12px rgb(18 18 24 / 16%);
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--color-text);
+  background-color: var(--color-page);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}
