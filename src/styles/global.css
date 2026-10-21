@@ -30,6 +30,7 @@
   --shadow-panel: 0 4px 12px rgb(48 48 60 / 7%);
 
   /* Скругления */
+  --radius-small: 2px;
   --radius-panel: 12px;
   --radius-control: 6px;
 
