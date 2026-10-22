@@ -19,61 +19,7 @@ export default function HomePage() {
         <span className={styles.bannerPlaceholder}>Место для баннера</span>
       </header>
 
-      <div className={`${styles.container} ${styles.workspace}`}>
-        <main className={styles.main}>
-          <PostVotesReader client:load />
-          <p className={styles.localNote}>Данные не покидают ваше устройство</p>
-        </main>
-
-        <aside className={styles.sidebar} aria-label="Панель управления">
-          <div className={styles.sidebarPanel}>
-            <div className={styles.themeControl}>
-              <span>Тема страницы</span>
-              <button
-                className={styles.themeButton}
-                type="button"
-                aria-label="Сменить тему страницы"
-                disabled
-              >
-                <span className={styles.themeLight}>С</span>
-                <span className={styles.themeDark}>Т</span>
-              </button>
-            </div>
-
-            <nav aria-label="Разделы архива">
-              <ul className={styles.menu}>
-                {[
-                  'Посты',
-                  'Комментарии',
-                  'Сообщения',
-                  'Оценки',
-                  'Сохранённое',
-                  'Аккаунт',
-                  'Настройки',
-                ].map((label) => (
-                  <li key={label}>
-                    <button
-                      className={styles.menuButton}
-                      type="button"
-                      aria-label={
-                        label === 'Оценки'
-                          ? 'Оценки: нравится и не нравится'
-                          : undefined
-                      }
-                      disabled
-                    >
-                      {label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-          <p className={styles.menuHint}>
-            Разделы станут доступны после открытия архива
-          </p>
-        </aside>
-      </div>
+      <PostVotesReader client:load />
 
       <footer className={styles.footer}>
         <div className={styles.container}>
