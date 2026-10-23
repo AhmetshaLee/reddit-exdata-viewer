@@ -4,7 +4,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-block: 20px;
+  margin-block: 20px 0;
+}
+
+.toolbarDivider {
+  margin: 16px 16px 20px;
+  border: 0;
+  border-top: 2px dashed var(--color-border-strong);
 }
 
 .fileName,

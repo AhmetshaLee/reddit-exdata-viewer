@@ -90,19 +90,22 @@ export default function PostVotesReader() {
         />
 
         {opened ? (
-          <div className={styles.toolbar}>
-            <p className={styles.fileName}>
-              {opened.fileName} · Записей: {records.length}
-            </p>
-            <button
-              className={styles.button}
-              type="button"
-              disabled={isReading}
-              onClick={chooseFile}
-            >
-              Открыть другой файл
-            </button>
-          </div>
+          <>
+            <div className={styles.toolbar}>
+              <p className={styles.fileName}>
+                {opened.fileName} · Записей: {records.length}
+              </p>
+              <button
+                className={styles.button}
+                type="button"
+                disabled={isReading}
+                onClick={chooseFile}
+              >
+                Открыть другой файл
+              </button>
+            </div>
+            <hr className={styles.toolbarDivider} />
+          </>
         ) : (
           <>
             <p className={layout.intro}>
@@ -167,6 +170,8 @@ export default function PostVotesReader() {
               <span className={layout.themeDark}>Т</span>
             </button>
           </div>
+
+          <hr className={layout.sidebarDivider} />
 
           <nav aria-label="Разделы архива">
             <ul className={layout.menu}>
