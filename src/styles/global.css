@@ -10,6 +10,7 @@
   --color-page: #d1d1dc;
   --color-banner: #ababb5;
   --color-surface: #4e4c58;
+  --color-surface-recessed: #34343c;
   --color-heading: #696773;
   --color-surface-inset: #e5e5ed;
   --color-control-disabled: #dfdfe8;
@@ -30,6 +31,7 @@
   --shadow-panel: 0 4px 12px rgb(48 48 60 / 7%);
 
   /* Скругления */
+  --radius-small: 2px;
   --radius-panel: 12px;
   --radius-control: 6px;
 
@@ -46,6 +48,7 @@
   --color-page: #4c4c58;
   --color-banner: #676773;
   --color-surface: #363641;
+  --color-surface-recessed: #24242b;
   --color-heading: #696975;
   --color-surface-inset: #4e4e59;
   --color-control-disabled: #555560;
