@@ -90,8 +90,8 @@ export function getCommunityChoices(records: PostVoteEntry[]): FilterChoice[] {
   }
 
   const choices = [...communities.values()].sort((first, second) => {
-    if (first.value === 'unknown') return 1
-    if (second.value === 'unknown') return -1
+    const countDifference = second.count - first.count
+    if (countDifference !== 0) return countDifference
     return first.label.localeCompare(second.label, 'en', {
       sensitivity: 'base',
     })
