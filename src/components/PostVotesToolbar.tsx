@@ -59,7 +59,7 @@ export default function PostVotesToolbar({
             className={styles.search}
             type="search"
             name="search"
-            placeholder="ID, ссылка или название из slug"
+            placeholder="Поиск по названию, ссылке или ID поста"
             value={filters.query}
             disabled={disabled}
             onChange={(event) =>
@@ -121,7 +121,7 @@ export default function PostVotesToolbar({
               type="reset"
               disabled={disabled}
             >
-              Сбросить фильтры
+              Сбросить
             </button>
           </div>
         </div>
