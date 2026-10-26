@@ -44,19 +44,3 @@ export function parsePostVotes(text: string): PostVote[] {
     direction: vote.direction.trim(),
   }))
 }
-
-export async function readPostVotes(file: File): Promise<PostVote[]> {
-  if (file.name.toLowerCase() !== 'post_votes.csv') {
-    throw new Error(
-      'Пока поддерживается только post_votes.csv из выгрузки Reddit.',
-    )
-  }
-
-  let text: string
-  try {
-    text = await file.text()
-  } catch {
-    throw new Error('Не удалось прочитать файл. Выберите его ещё раз.')
-  }
-  return parsePostVotes(text)
-}
