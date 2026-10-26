@@ -10,7 +10,7 @@ import {
   type PostVoteEntry,
   type PostVoteFilters,
 } from '../lib/post-vote-filters'
-import { readPostVotes } from '../lib/post-votes'
+import { readRedditSource } from '../lib/read-reddit-source'
 import layout from '../pages/index.module.css'
 import Pagination from './Pagination'
 import PostVoteCard from './PostVoteCard'
@@ -86,7 +86,8 @@ export default function PostVotesReader() {
     setIsReading(true)
     setError('')
     try {
-      const records = preparePostVotes(await readPostVotes(file))
+      const data = await readRedditSource(file)
+      const records = preparePostVotes(data[0].records)
       setOpened({ fileName: file.name, records })
       setFilters(DEFAULT_FILTERS)
       resetPage(records.length)
@@ -129,7 +130,7 @@ export default function PostVotesReader() {
         <input
           ref={fileInput}
           type="file"
-          accept=".csv,text/csv"
+          accept=".csv,.zip,text/csv,application/zip,application/x-zip-compressed"
           hidden
           disabled={isReading}
           onChange={handleFileChange}
