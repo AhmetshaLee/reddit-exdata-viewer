@@ -189,6 +189,11 @@
   cursor: not-allowed;
 }
 
+.menuButton[aria-current='true'] {
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+}
+
 .footer {
   padding-bottom: 24px;
   color: var(--color-text);

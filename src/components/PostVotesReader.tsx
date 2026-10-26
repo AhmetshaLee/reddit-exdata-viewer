@@ -120,6 +120,23 @@ export default function PostVotesReader() {
   }
 
   const chooseFile = () => fileInput.current?.click()
+  const menuItems = [
+    { label: 'Посты', disabled: true },
+    { label: 'Комментарии', disabled: true },
+    { label: 'Сообщения', disabled: true },
+    {
+      label: 'Оценки',
+      description: 'Оценки: нравится и не нравится',
+      disabled: !opened || isReading,
+      current: opened ? true : undefined,
+    },
+    { label: 'Сохранённое', disabled: true },
+    { label: 'Аккаунт', disabled: true },
+    { label: 'Настройки', disabled: true },
+  ]
+  const menuHint = opened
+    ? 'Доступны данные из открытого файла'
+    : 'Пункты меню станут доступны после открытия CSV или ZIP'
 
   return (
     <div className={`${layout.container} ${layout.workspace}`}>
@@ -229,25 +246,14 @@ export default function PostVotesReader() {
 
           <nav aria-label="Разделы архива">
             <ul className={layout.menu}>
-              {[
-                'Посты',
-                'Комментарии',
-                'Сообщения',
-                'Оценки',
-                'Сохранённое',
-                'Аккаунт',
-                'Настройки',
-              ].map((label) => (
+              {menuItems.map(({ label, description, disabled, current }) => (
                 <li key={label}>
                   <button
                     className={layout.menuButton}
                     type="button"
-                    aria-label={
-                      label === 'Оценки'
-                        ? 'Оценки: нравится и не нравится'
-                        : undefined
-                    }
-                    disabled
+                    aria-label={description}
+                    aria-current={current}
+                    disabled={disabled}
                   >
                     {label}
                   </button>
@@ -256,9 +262,7 @@ export default function PostVotesReader() {
             </ul>
           </nav>
         </div>
-        <p className={layout.menuHint}>
-          Разделы станут доступны после открытия архива
-        </p>
+        <p className={layout.menuHint}>{menuHint}</p>
         {opened && pageCount > 0 && (
           <Pagination
             page={page}
