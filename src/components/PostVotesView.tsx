@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react'
 
 import { getPageFromHash, PAGE_SIZE } from '../lib/pagination'
 import {
@@ -52,49 +58,46 @@ export default function PostVotesView({
   const start = (page - 1) * PAGE_SIZE
   const pageRecords = filteredRecords.slice(start, start + PAGE_SIZE)
 
-  function resetPage() {
-    setPage(1)
-    const url = records.length
-      ? '#1'
-      : window.location.pathname + window.location.search
-    window.history.replaceState(window.history.state, '', url)
-  }
+  const updatePage = useCallback(
+    (nextPage: number, addToHistory = false) => {
+      setPage(nextPage)
+      const url = records.length
+        ? `#${nextPage}`
+        : window.location.pathname + window.location.search
+      if (addToHistory) {
+        window.history.pushState(window.history.state, '', url)
+      } else {
+        window.history.replaceState(window.history.state, '', url)
+      }
+    },
+    [records.length],
+  )
 
   function changeFilters(nextFilters: PostVoteFilters) {
     setFilters(nextFilters)
-    resetPage()
+    updatePage(1)
   }
 
   function changePage(nextPage: number) {
     if (nextPage < 1 || nextPage > pageCount || nextPage === page) return
-    window.history.pushState(window.history.state, '', `#${nextPage}`)
-    setPage(nextPage)
+    updatePage(nextPage, true)
   }
 
   useEffect(() => {
-    const url = records.length
-      ? '#1'
-      : window.location.pathname + window.location.search
-    window.history.replaceState(window.history.state, '', url)
-  }, [records.length])
+    updatePage(1)
+  }, [updatePage])
 
   useEffect(() => {
-    if (pageCount === 0) return
-
     const handleHashChange = () => {
       const nextPage = getPageFromHash(window.location.hash, pageCount)
-      const hash = `#${nextPage}`
-      if (window.location.hash !== hash) {
-        window.history.replaceState(window.history.state, '', hash)
-      }
-      setPage(nextPage)
+      updatePage(nextPage)
     }
 
     window.addEventListener('hashchange', handleHashChange)
     return () => {
       window.removeEventListener('hashchange', handleHashChange)
     }
-  }, [pageCount])
+  }, [pageCount, updatePage])
 
   return (
     <ReaderLayout

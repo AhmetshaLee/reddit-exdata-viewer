@@ -48,7 +48,6 @@ export default function ArchiveReader() {
         fileName: file.name,
         files,
       }))
-      clearPageHash()
     } catch (cause) {
       setError(
         cause instanceof Error ? cause.message : 'Не удалось открыть файл.',
@@ -56,11 +55,6 @@ export default function ArchiveReader() {
     } finally {
       setIsReading(false)
     }
-  }
-
-  function clearPageHash() {
-    const url = window.location.pathname + window.location.search
-    window.history.replaceState(window.history.state, '', url)
   }
 
   const chooseFile = () => fileInput.current?.click()
