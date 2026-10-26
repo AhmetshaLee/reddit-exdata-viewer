@@ -1,6 +1,6 @@
 import type { PostVote } from '../lib/post-votes'
 import { getRedditPostLink } from '../lib/reddit-post-link'
-import styles from './post-votes.module.css'
+import styles from './posts.module.css'
 
 const directionLabels: Record<string, string> = {
   up: 'Нравится',
@@ -8,12 +8,12 @@ const directionLabels: Record<string, string> = {
   none: 'Не указана',
 }
 
-export default function PostVoteCard({ vote }: { vote: PostVote }) {
-  const link = getRedditPostLink(vote.permalink)
-  const title = link?.title ?? `Публикация #${vote.id}`
-  const directionLabel = Object.hasOwn(directionLabels, vote.direction)
-    ? directionLabels[vote.direction]
-    : vote.direction
+export default function PostCard({ post }: { post: PostVote }) {
+  const link = getRedditPostLink(post.permalink)
+  const title = link?.title ?? `Публикация #${post.id}`
+  const directionLabel = Object.hasOwn(directionLabels, post.direction)
+    ? directionLabels[post.direction]
+    : post.direction
 
   const content = (
     <>
@@ -24,8 +24,8 @@ export default function PostVoteCard({ vote }: { vote: PostVote }) {
         {title}
       </h2>
       <div className={styles.cardMeta}>
-        <span className={styles.cardId} title={vote.id}>
-          #{vote.id}
+        <span className={styles.cardId} title={post.id}>
+          #{post.id}
         </span>
         <span
           className={styles.direction}

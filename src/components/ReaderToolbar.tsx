@@ -3,9 +3,9 @@ import {
   type FilterChoice,
   type PostVoteFilters,
 } from '../lib/post-vote-filters'
-import styles from './post-votes-toolbar.module.css'
+import styles from './reader-toolbar.module.css'
 
-type PostVotesToolbarProps = {
+type ReaderToolbarProps = {
   onChooseFile: () => void
   disabled: boolean
   fileName: string
@@ -17,7 +17,7 @@ type PostVotesToolbarProps = {
   onFiltersChange: (filters: PostVoteFilters) => void
 }
 
-export default function PostVotesToolbar({
+export default function ReaderToolbar({
   onChooseFile,
   disabled,
   fileName,
@@ -27,7 +27,7 @@ export default function PostVotesToolbar({
   totalRecords,
   matchedRecords,
   onFiltersChange,
-}: PostVotesToolbarProps) {
+}: ReaderToolbarProps) {
   return (
     <section className={styles.toolbar} aria-label="Панель поиска и фильтров">
       <div className={styles.documentBar}>

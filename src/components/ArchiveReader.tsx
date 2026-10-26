@@ -12,17 +12,17 @@ import {
 } from '../lib/post-vote-filters'
 import { readRedditSource } from '../lib/read-reddit-source'
 import layout from '../pages/index.module.css'
-import Pagination from './Pagination'
-import PostVoteCard from './PostVoteCard'
-import PostVotesToolbar from './PostVotesToolbar'
-import styles from './post-votes.module.css'
+import PostCard from './PostCard'
+import ReaderPagination from './ReaderPagination'
+import ReaderToolbar from './ReaderToolbar'
+import styles from './posts.module.css'
 
 type OpenedVotes = {
   fileName: string
   records: PostVoteEntry[]
 }
 
-export default function PostVotesReader() {
+export default function ArchiveReader() {
   const fileInput = useRef<HTMLInputElement>(null)
   const [opened, setOpened] = useState<OpenedVotes | null>(null)
   const [page, setPage] = useState(1)
@@ -193,7 +193,7 @@ export default function PostVotesReader() {
 
         {opened && (
           <>
-            <PostVotesToolbar
+            <ReaderToolbar
               onChooseFile={chooseFile}
               disabled={isReading}
               fileName={opened.fileName}
@@ -221,7 +221,7 @@ export default function PostVotesReader() {
           start={start + 1}
         >
           {pageRecords.map(({ vote, sourceIndex }) => (
-            <PostVoteCard key={sourceIndex} vote={vote} />
+            <PostCard key={sourceIndex} post={vote} />
           ))}
         </ol>
         <p className={layout.localNote}>Данные не покидают ваше устройство</p>
@@ -264,7 +264,7 @@ export default function PostVotesReader() {
         </div>
         <p className={layout.menuHint}>{menuHint}</p>
         {opened && pageCount > 0 && (
-          <Pagination
+          <ReaderPagination
             page={page}
             pageCount={pageCount}
             totalRecords={filteredRecords.length}
