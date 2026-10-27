@@ -12,10 +12,11 @@ import {
 } from '../lib/post-vote-filters'
 import { readRedditSource } from '../lib/read-reddit-source'
 import layout from '../pages/index.module.css'
-import PostCard from './PostCard'
+import FileUploadView from './FileUploadView'
+import PostVotesView from './PostVotesView'
+import ReaderLayout from './ReaderLayout'
 import ReaderMenu, { type ReaderMenuItemId } from './ReaderMenu'
 import ReaderPagination from './ReaderPagination'
-import ReaderToolbar from './ReaderToolbar'
 import styles from './posts.module.css'
 
 type OpenedVotes = {
@@ -135,121 +136,90 @@ export default function ArchiveReader() {
     setActiveMenuItem(id)
   }
 
-  return (
-    <div className={`${layout.container} ${layout.workspace}`}>
-      <main className={layout.main}>
-        <h1 className={layout.title}>
-          {opened ? 'Оценки' : 'Ваш архив Reddit'}
-        </h1>
-        <input
-          ref={fileInput}
-          type="file"
-          accept=".csv,.zip,text/csv,application/zip,application/x-zip-compressed"
-          hidden
-          disabled={isReading}
-          onChange={handleFileChange}
-        />
+  const feedback = (
+    <>
+      {isReading && (
+        <p className={styles.message} role="status">
+          Чтение файла…
+        </p>
+      )}
+      {error && (
+        <p className={styles.message} role="alert">
+          {error}
+        </p>
+      )}
+    </>
+  )
 
-        {!opened && (
+  function renderContent() {
+    if (!opened) {
+      return (
+        <>
+          <FileUploadView disabled={isReading} onChooseFile={chooseFile} />
+          {feedback}
+        </>
+      )
+    }
+
+    switch (activeMenuItem) {
+      case 'post-votes':
+        return (
           <>
-            <p className={layout.intro}>
-              Откройте архив, чтобы просматривать свои данные в удобном виде
-            </p>
-            <section className={layout.dropZone} aria-labelledby="upload-title">
-              <h2 className={layout.uploadTitle} id="upload-title">
-                Перетащите архив сюда
-              </h2>
-              <p className={layout.uploadDescription}>
-                или выберите файл на компьютере
-              </p>
-              <button
-                className={layout.uploadButton}
-                type="button"
-                disabled={isReading}
-                onClick={chooseFile}
-              >
-                Выбрать архив
-              </button>
-            </section>
-          </>
-        )}
-
-        {isReading && (
-          <p className={styles.message} role="status">
-            Чтение файла…
-          </p>
-        )}
-        {error && (
-          <p className={styles.message} role="alert">
-            {error}
-          </p>
-        )}
-        {opened && records.length === 0 && (
-          <p className={styles.message}>В файле нет оценок</p>
-        )}
-
-        {opened && (
-          <>
-            <ReaderToolbar
-              onChooseFile={chooseFile}
-              disabled={isReading}
+            {feedback}
+            <PostVotesView
               fileName={opened.fileName}
               filters={filters}
               voteChoices={voteChoices}
               communityChoices={communityChoices}
               totalRecords={records.length}
               matchedRecords={filteredRecords.length}
+              pageRecords={pageRecords}
+              start={start}
+              disabled={isReading}
+              onChooseFile={chooseFile}
               onFiltersChange={changeFilters}
             />
-            <hr className={styles.listDivider} />
           </>
-        )}
-        {opened && records.length > 0 && filteredRecords.length === 0 && (
-          <div className={styles.emptyState}>
-            <p className={styles.emptyMessage}>
-              По выбранным условиям ничего не найдено
-            </p>
-            <div className={styles.emptyIllustration} aria-hidden="true" />
+        )
+      default:
+        return feedback
+    }
+  }
+
+  return (
+    <ReaderLayout
+      title={opened ? 'Оценки' : 'Ваш архив Reddit'}
+      menu={
+        <>
+          <div className={layout.sidebarPanel}>
+            <div className={layout.themeControl}>
+              <span>Тема страницы</span>
+              <button
+                className={layout.themeButton}
+                type="button"
+                aria-label="Сменить тему страницы"
+                disabled
+              >
+                <span className={layout.themeLight}>С</span>
+                <span className={layout.themeDark}>Т</span>
+              </button>
+            </div>
+
+            <hr className={layout.sidebarDivider} />
+
+            <ReaderMenu
+              activeMenuItem={activeMenuItem}
+              availableMenuItems={availableMenuItems}
+              disabled={isReading}
+              onSelect={selectMenuItem}
+            />
           </div>
-        )}
-        <ol
-          className={styles.cards}
-          aria-label="Оценки постов"
-          start={start + 1}
-        >
-          {pageRecords.map(({ vote, sourceIndex }) => (
-            <PostCard key={sourceIndex} post={vote} />
-          ))}
-        </ol>
-        <p className={layout.localNote}>Данные не покидают ваше устройство</p>
-      </main>
-
-      <aside className={layout.sidebar} aria-label="Панель управления">
-        <div className={layout.sidebarPanel}>
-          <div className={layout.themeControl}>
-            <span>Тема страницы</span>
-            <button
-              className={layout.themeButton}
-              type="button"
-              aria-label="Сменить тему страницы"
-              disabled
-            >
-              <span className={layout.themeLight}>С</span>
-              <span className={layout.themeDark}>Т</span>
-            </button>
-          </div>
-
-          <hr className={layout.sidebarDivider} />
-
-          <ReaderMenu
-            activeMenuItem={activeMenuItem}
-            availableMenuItems={availableMenuItems}
-            disabled={isReading}
-            onSelect={selectMenuItem}
-          />
-        </div>
-        <p className={layout.menuHint}>{menuHint}</p>
-        {opened && pageCount > 0 && (
+          <p className={layout.menuHint}>{menuHint}</p>
+        </>
+      }
+      pagination={
+        opened &&
+        pageCount > 0 && (
           <ReaderPagination
             page={page}
             pageCount={pageCount}
@@ -257,8 +227,18 @@ export default function ArchiveReader() {
             pageSize={PAGE_SIZE}
             onPageChange={changePage}
           />
-        )}
-      </aside>
-    </div>
+        )
+      }
+    >
+      <input
+        ref={fileInput}
+        type="file"
+        accept=".csv,.zip,text/csv,application/zip,application/x-zip-compressed"
+        hidden
+        disabled={isReading}
+        onChange={handleFileChange}
+      />
+      {renderContent()}
+    </ReaderLayout>
   )
 }
