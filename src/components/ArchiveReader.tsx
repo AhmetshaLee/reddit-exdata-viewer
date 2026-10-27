@@ -13,6 +13,7 @@ import {
 import { readRedditSource } from '../lib/read-reddit-source'
 import layout from '../pages/index.module.css'
 import PostCard from './PostCard'
+import ReaderMenu, { type ReaderMenuItemId } from './ReaderMenu'
 import ReaderPagination from './ReaderPagination'
 import ReaderToolbar from './ReaderToolbar'
 import styles from './posts.module.css'
@@ -29,6 +30,9 @@ export default function ArchiveReader() {
   const [filters, setFilters] = useState(DEFAULT_FILTERS)
   const [isReading, setIsReading] = useState(false)
   const [error, setError] = useState('')
+  const [activeMenuItem, setActiveMenuItem] = useState<ReaderMenuItemId | null>(
+    null,
+  )
 
   const records = opened?.records ?? []
   const filteredRecords = useMemo(
@@ -89,6 +93,7 @@ export default function ArchiveReader() {
       const data = await readRedditSource(file)
       const records = preparePostVotes(data[0].records)
       setOpened({ fileName: file.name, records })
+      setActiveMenuItem('post-votes')
       setFilters(DEFAULT_FILTERS)
       resetPage(records.length)
     } catch (cause) {
@@ -120,23 +125,15 @@ export default function ArchiveReader() {
   }
 
   const chooseFile = () => fileInput.current?.click()
-  const menuItems = [
-    { label: 'Посты', disabled: true },
-    { label: 'Комментарии', disabled: true },
-    { label: 'Сообщения', disabled: true },
-    {
-      label: 'Оценки',
-      description: 'Оценки: нравится и не нравится',
-      disabled: !opened || isReading,
-      current: opened ? true : undefined,
-    },
-    { label: 'Сохранённое', disabled: true },
-    { label: 'Аккаунт', disabled: true },
-    { label: 'Настройки', disabled: true },
-  ]
+  const availableMenuItems: ReaderMenuItemId[] = opened ? ['post-votes'] : []
   const menuHint = opened
     ? 'Доступны данные из открытого файла'
     : 'Пункты меню станут доступны после открытия CSV или ZIP'
+
+  function selectMenuItem(id: ReaderMenuItemId) {
+    if (isReading || !availableMenuItems.includes(id)) return
+    setActiveMenuItem(id)
+  }
 
   return (
     <div className={`${layout.container} ${layout.workspace}`}>
@@ -244,23 +241,12 @@ export default function ArchiveReader() {
 
           <hr className={layout.sidebarDivider} />
 
-          <nav aria-label="Разделы архива">
-            <ul className={layout.menu}>
-              {menuItems.map(({ label, description, disabled, current }) => (
-                <li key={label}>
-                  <button
-                    className={layout.menuButton}
-                    type="button"
-                    aria-label={description}
-                    aria-current={current}
-                    disabled={disabled}
-                  >
-                    {label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <ReaderMenu
+            activeMenuItem={activeMenuItem}
+            availableMenuItems={availableMenuItems}
+            disabled={isReading}
+            onSelect={selectMenuItem}
+          />
         </div>
         <p className={layout.menuHint}>{menuHint}</p>
         {opened && pageCount > 0 && (
