@@ -3,10 +3,11 @@ import {
   type FilterChoice,
   type PostVoteFilters,
 } from '../lib/post-vote-filters'
+import FilePickerButton from './FilePickerButton'
 import styles from './reader-toolbar.module.css'
 
 type ReaderToolbarProps = {
-  onChooseFile: () => void
+  onFileSelected: (file: File) => void
   disabled: boolean
   fileName: string
   filters: PostVoteFilters
@@ -18,7 +19,7 @@ type ReaderToolbarProps = {
 }
 
 export default function ReaderToolbar({
-  onChooseFile,
+  onFileSelected,
   disabled,
   fileName,
   filters,
@@ -36,14 +37,13 @@ export default function ReaderToolbar({
             {fileName}
           </span>
         </div>
-        <button
+        <FilePickerButton
           className={styles.button}
-          type="button"
-          onClick={onChooseFile}
           disabled={disabled}
+          onFileSelected={onFileSelected}
         >
           Открыть файл
-        </button>
+        </FilePickerButton>
       </div>
       <form
         className={styles.filterPanel}

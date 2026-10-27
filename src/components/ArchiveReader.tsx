@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { getPageFromHash, PAGE_SIZE } from '../lib/pagination'
 import {
@@ -25,7 +25,6 @@ type OpenedVotes = {
 }
 
 export default function ArchiveReader() {
-  const fileInput = useRef<HTMLInputElement>(null)
   const [opened, setOpened] = useState<OpenedVotes | null>(null)
   const [page, setPage] = useState(1)
   const [filters, setFilters] = useState(DEFAULT_FILTERS)
@@ -83,11 +82,7 @@ export default function ArchiveReader() {
     }
   }, [opened])
 
-  async function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.currentTarget.files?.[0]
-    event.currentTarget.value = ''
-    if (!file) return
-
+  async function openFile(file: File) {
     setIsReading(true)
     setError('')
     try {
@@ -125,7 +120,6 @@ export default function ArchiveReader() {
     setPage(nextPage)
   }
 
-  const chooseFile = () => fileInput.current?.click()
   const availableMenuItems: ReaderMenuItemId[] = opened ? ['post-votes'] : []
   const menuHint = opened
     ? 'Доступны данные из открытого файла'
@@ -155,7 +149,7 @@ export default function ArchiveReader() {
     if (!opened) {
       return (
         <>
-          <FileUploadView disabled={isReading} onChooseFile={chooseFile} />
+          <FileUploadView disabled={isReading} onFileSelected={openFile} />
           {feedback}
         </>
       )
@@ -176,7 +170,7 @@ export default function ArchiveReader() {
               pageRecords={pageRecords}
               start={start}
               disabled={isReading}
-              onChooseFile={chooseFile}
+              onFileSelected={openFile}
               onFiltersChange={changeFilters}
             />
           </>
@@ -230,14 +224,6 @@ export default function ArchiveReader() {
         )
       }
     >
-      <input
-        ref={fileInput}
-        type="file"
-        accept=".csv,.zip,text/csv,application/zip,application/x-zip-compressed"
-        hidden
-        disabled={isReading}
-        onChange={handleFileChange}
-      />
       {renderContent()}
     </ReaderLayout>
   )

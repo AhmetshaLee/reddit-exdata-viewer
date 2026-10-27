@@ -1,13 +1,14 @@
 import styles from '../pages/index.module.css'
+import FilePickerButton from './FilePickerButton'
 
 type FileUploadViewProps = {
   disabled: boolean
-  onChooseFile: () => void
+  onFileSelected: (file: File) => void
 }
 
 export default function FileUploadView({
   disabled,
-  onChooseFile,
+  onFileSelected,
 }: FileUploadViewProps) {
   return (
     <>
@@ -21,14 +22,13 @@ export default function FileUploadView({
         <p className={styles.uploadDescription}>
           или выберите файл на компьютере
         </p>
-        <button
+        <FilePickerButton
           className={styles.uploadButton}
           disabled={disabled}
-          type="button"
-          onClick={onChooseFile}
+          onFileSelected={onFileSelected}
         >
           Выбрать архив
-        </button>
+        </FilePickerButton>
       </section>
     </>
   )

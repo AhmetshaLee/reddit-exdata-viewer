@@ -17,7 +17,7 @@ type PostVotesViewProps = {
   pageRecords: PostVoteEntry[]
   start: number
   disabled: boolean
-  onChooseFile: () => void
+  onFileSelected: (file: File) => void
   onFiltersChange: (filters: PostVoteFilters) => void
 }
 
@@ -31,7 +31,7 @@ export default function PostVotesView({
   pageRecords,
   start,
   disabled,
-  onChooseFile,
+  onFileSelected,
   onFiltersChange,
 }: PostVotesViewProps) {
   return (
@@ -40,7 +40,7 @@ export default function PostVotesView({
         <p className={styles.message}>В файле нет оценок</p>
       )}
       <ReaderToolbar
-        onChooseFile={onChooseFile}
+        onFileSelected={onFileSelected}
         disabled={disabled}
         fileName={fileName}
         filters={filters}
