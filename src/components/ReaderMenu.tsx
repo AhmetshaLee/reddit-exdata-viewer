@@ -1,28 +1,45 @@
+import type { RedditFileData } from '../lib/read-reddit-source'
 import styles from '../pages/index.module.css'
 
-type ReaderMenuProps = {
-  hasFile: boolean
-  isReading: boolean
+type ReaderMenuItem = {
+  label: string
+  description?: string
+  type?: RedditFileData['type']
 }
 
-export default function ReaderMenu({ hasFile, isReading }: ReaderMenuProps) {
-  const items = [
-    { label: 'Посты', disabled: true },
-    { label: 'Комментарии', disabled: true },
-    { label: 'Сообщения', disabled: true },
+type ReaderMenuProps = {
+  availableTypes: RedditFileData['type'][]
+  activeType: RedditFileData['type']
+  isReading: boolean
+  onFileChange: (type: RedditFileData['type']) => void
+}
+
+export default function ReaderMenu({
+  availableTypes,
+  activeType,
+  isReading,
+  onFileChange,
+}: ReaderMenuProps) {
+  const items: ReaderMenuItem[] = [
+    { label: 'Посты' },
+    { label: 'Комментарии' },
+    { label: 'Сообщения' },
     {
       label: 'Оценки',
       description: 'Оценки: нравится и не нравится',
-      disabled: !hasFile || isReading,
-      current: hasFile ? true : undefined,
+      type: 'post-votes',
     },
-    { label: 'Сохранённое', disabled: true },
-    { label: 'Аккаунт', disabled: true },
-    { label: 'Настройки', disabled: true },
+    { label: 'Сохранённое' },
+    { label: 'Аккаунт' },
+    {
+      label: 'Настройки',
+      type: 'user-preferences',
+    },
   ]
-  const hint = hasFile
-    ? 'Доступны данные из открытого файла'
-    : 'Пункты меню станут доступны после открытия CSV или ZIP'
+  const hint =
+    availableTypes.length > 0
+      ? 'Доступны данные из открытого файла'
+      : 'Пункты меню станут доступны после открытия CSV или ZIP'
 
   return (
     <>
@@ -44,19 +61,29 @@ export default function ReaderMenu({ hasFile, isReading }: ReaderMenuProps) {
 
         <nav aria-label="Разделы архива">
           <ul className={styles.menu}>
-            {items.map(({ label, description, disabled, current }) => (
-              <li key={label}>
-                <button
-                  className={styles.menuButton}
-                  type="button"
-                  aria-label={description}
-                  aria-current={current}
-                  disabled={disabled}
-                >
-                  {label}
-                </button>
-              </li>
-            ))}
+            {items.map(({ label, description, type }) => {
+              const available =
+                type !== undefined && availableTypes.includes(type)
+
+              return (
+                <li key={label}>
+                  <button
+                    className={styles.menuButton}
+                    type="button"
+                    aria-label={description}
+                    aria-current={
+                      available && type === activeType ? true : undefined
+                    }
+                    disabled={isReading || !available}
+                    onClick={() => {
+                      if (type !== undefined) onFileChange(type)
+                    }}
+                  >
+                    {label}
+                  </button>
+                </li>
+              )
+            })}
           </ul>
         </nav>
       </div>

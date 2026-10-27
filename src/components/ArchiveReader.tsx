@@ -7,6 +7,7 @@ import {
 import layout from '../pages/index.module.css'
 import FileUploadView from './FileUploadView'
 import PostVotesView from './PostVotesView'
+import PreferencesView from './PreferencesView'
 import ReaderMenu from './ReaderMenu'
 
 type OpenedSource = {
@@ -18,8 +19,13 @@ type OpenedSource = {
 export default function ArchiveReader() {
   const fileInput = useRef<HTMLInputElement>(null)
   const [opened, setOpened] = useState<OpenedSource | null>(null)
+  const [activeType, setActiveType] =
+    useState<RedditFileData['type']>('post-votes')
   const [isReading, setIsReading] = useState(false)
   const [error, setError] = useState('')
+
+  const activeFile = opened?.files.find((file) => file.type === activeType)
+  const availableTypes = opened?.files.map((file) => file.type) ?? []
 
   useEffect(() => {
     if (!opened) return
@@ -43,11 +49,14 @@ export default function ArchiveReader() {
     setError('')
     try {
       const files = await readRedditSource(file)
+      const firstFile =
+        files.find((file) => file.type === 'post-votes') ?? files[0]
       setOpened((previous) => ({
         sourceId: (previous?.sourceId ?? 0) + 1,
         fileName: file.name,
         files,
       }))
+      setActiveType(firstFile.type)
     } catch (cause) {
       setError(
         cause instanceof Error ? cause.message : 'Не удалось открыть файл.',
@@ -57,9 +66,23 @@ export default function ArchiveReader() {
     }
   }
 
+  function changeFile(type: RedditFileData['type']) {
+    if (isReading || type === activeType) return
+    if (!availableTypes.includes(type)) return
+
+    setActiveType(type)
+  }
+
   const chooseFile = () => fileInput.current?.click()
 
-  const menu = <ReaderMenu hasFile={opened !== null} isReading={isReading} />
+  const menu = (
+    <ReaderMenu
+      availableTypes={availableTypes}
+      activeType={activeType}
+      isReading={isReading}
+      onFileChange={changeFile}
+    />
+  )
   const feedback = (
     <>
       {isReading && (
@@ -76,7 +99,7 @@ export default function ArchiveReader() {
   )
 
   function renderView() {
-    if (!opened) {
+    if (!opened || !activeFile) {
       return (
         <FileUploadView
           menu={menu}
@@ -87,17 +110,29 @@ export default function ArchiveReader() {
       )
     }
 
-    return (
-      <PostVotesView
-        key={opened.sourceId}
-        votes={opened.files[0].records}
-        fileName={opened.fileName}
-        menu={menu}
-        feedback={feedback}
-        isReading={isReading}
-        onChooseFile={chooseFile}
-      />
-    )
+    switch (activeFile.type) {
+      case 'post-votes':
+        return (
+          <PostVotesView
+            key={opened.sourceId}
+            votes={activeFile.records}
+            fileName={opened.fileName}
+            menu={menu}
+            feedback={feedback}
+            isReading={isReading}
+            onChooseFile={chooseFile}
+          />
+        )
+      case 'user-preferences':
+        return (
+          <PreferencesView
+            key={opened.sourceId}
+            records={activeFile.records}
+            menu={menu}
+            feedback={feedback}
+          />
+        )
+    }
   }
 
   return (
