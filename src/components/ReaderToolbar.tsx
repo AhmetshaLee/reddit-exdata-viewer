@@ -6,29 +6,48 @@ import {
 import FilePickerButton from './FilePickerButton'
 import styles from './reader-toolbar.module.css'
 
+export type PostVoteFiltering = {
+  values: PostVoteFilters
+  voteChoices: FilterChoice[]
+  communityChoices: FilterChoice[]
+  onChange: (values: PostVoteFilters) => void
+}
+
 type ReaderToolbarProps = {
   onFileSelected: (file: File) => void
   disabled: boolean
   fileName: string
-  filters: PostVoteFilters
-  voteChoices: FilterChoice[]
-  communityChoices: FilterChoice[]
+  filtering: PostVoteFiltering
   totalRecords: number
   matchedRecords: number
-  onFiltersChange: (filters: PostVoteFilters) => void
 }
 
 export default function ReaderToolbar({
   onFileSelected,
   disabled,
   fileName,
-  filters,
-  voteChoices,
-  communityChoices,
+  filtering,
   totalRecords,
   matchedRecords,
-  onFiltersChange,
 }: ReaderToolbarProps) {
+  const { values, voteChoices, communityChoices, onChange } = filtering
+  const groups = [
+    {
+      name: 'direction',
+      legend: 'Оценки',
+      choices: voteChoices,
+      selected: values.direction,
+      onChange: (direction: string) => onChange({ ...values, direction }),
+    },
+    {
+      name: 'community',
+      legend: 'Сабреддиты',
+      choices: communityChoices,
+      selected: values.community,
+      onChange: (community: string) => onChange({ ...values, community }),
+    },
+  ]
+
   return (
     <section className={styles.toolbar} aria-label="Панель поиска и фильтров">
       <div className={styles.documentBar}>
@@ -50,7 +69,7 @@ export default function ReaderToolbar({
         onSubmit={(event) => event.preventDefault()}
         onReset={(event) => {
           event.preventDefault()
-          onFiltersChange(DEFAULT_FILTERS)
+          onChange(DEFAULT_FILTERS)
         }}
       >
         <label className={styles.searchField}>
@@ -60,10 +79,10 @@ export default function ReaderToolbar({
             type="search"
             name="search"
             placeholder="Поиск по названию, ссылке или ID поста"
-            value={filters.query}
+            value={values.query}
             disabled={disabled}
             onChange={(event) =>
-              onFiltersChange({ ...filters, query: event.currentTarget.value })
+              onChange({ ...values, query: event.currentTarget.value })
             }
           />
         </label>
@@ -71,20 +90,7 @@ export default function ReaderToolbar({
           <details>
             <summary className={styles.summary}>Фильтры</summary>
             <div className={styles.filters}>
-              {[
-                {
-                  name: 'direction',
-                  legend: 'Оценки',
-                  choices: voteChoices,
-                  selected: filters.direction,
-                },
-                {
-                  name: 'community',
-                  legend: 'Сабреддиты',
-                  choices: communityChoices,
-                  selected: filters.community,
-                },
-              ].map(({ name, legend, choices, selected }) => (
+              {groups.map(({ name, legend, choices, selected, onChange }) => (
                 <fieldset
                   className={styles.group}
                   key={name}
@@ -92,21 +98,19 @@ export default function ReaderToolbar({
                 >
                   <legend>{legend}</legend>
                   <div className={styles.choices}>
-                    {choices.map(({ value, label, count }) => (
-                      <label className={styles.choice} key={value}>
+                    {choices.map((choice) => (
+                      <label className={styles.choice} key={choice.value}>
                         <input
                           className={styles.choiceInput}
                           type="radio"
                           name={name}
-                          value={value}
-                          checked={selected === value}
-                          onChange={() =>
-                            onFiltersChange({ ...filters, [name]: value })
-                          }
+                          value={choice.value}
+                          checked={selected === choice.value}
+                          onChange={() => onChange(choice.value)}
                         />
                         <span className={styles.chip}>
-                          <span>{label}</span>
-                          <span className={styles.count}>{count}</span>
+                          <span>{choice.label}</span>
+                          <span className={styles.count}>{choice.count}</span>
                         </span>
                       </label>
                     ))}

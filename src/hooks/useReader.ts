@@ -93,14 +93,16 @@ export function useReader() {
     opened && activeMenuItem === 'post-votes'
       ? {
           fileName: opened.fileName,
-          filters,
-          voteChoices,
-          communityChoices,
+          filtering: {
+            values: filters,
+            voteChoices,
+            communityChoices,
+            onChange: changeFilters,
+          },
           totalRecords: records.length,
           matchedRecords: filteredRecords.length,
           pageRecords,
           start,
-          onFiltersChange: changeFilters,
         }
       : null
 

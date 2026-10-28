@@ -1,38 +1,28 @@
-import type {
-  FilterChoice,
-  PostVoteEntry,
-  PostVoteFilters,
-} from '../lib/post-vote-filters'
+import type { PostVoteEntry } from '../lib/post-vote-filters'
 import PostCard from './PostCard'
-import ReaderToolbar from './ReaderToolbar'
+import ReaderToolbar, { type PostVoteFiltering } from './ReaderToolbar'
 import styles from './posts.module.css'
 
 type PostVotesViewProps = {
   fileName: string
-  filters: PostVoteFilters
-  voteChoices: FilterChoice[]
-  communityChoices: FilterChoice[]
+  filtering: PostVoteFiltering
   totalRecords: number
   matchedRecords: number
   pageRecords: PostVoteEntry[]
   start: number
   disabled: boolean
   onFileSelected: (file: File) => void
-  onFiltersChange: (filters: PostVoteFilters) => void
 }
 
 export default function PostVotesView({
   fileName,
-  filters,
-  voteChoices,
-  communityChoices,
+  filtering,
   totalRecords,
   matchedRecords,
   pageRecords,
   start,
   disabled,
   onFileSelected,
-  onFiltersChange,
 }: PostVotesViewProps) {
   return (
     <>
@@ -40,15 +30,12 @@ export default function PostVotesView({
         <p className={styles.message}>В файле нет оценок</p>
       )}
       <ReaderToolbar
-        onFileSelected={onFileSelected}
-        disabled={disabled}
+        filtering={filtering}
         fileName={fileName}
-        filters={filters}
-        voteChoices={voteChoices}
-        communityChoices={communityChoices}
+        disabled={disabled}
+        onFileSelected={onFileSelected}
         totalRecords={totalRecords}
         matchedRecords={matchedRecords}
-        onFiltersChange={onFiltersChange}
       />
       <hr className={styles.listDivider} />
       {totalRecords > 0 && matchedRecords === 0 && (
