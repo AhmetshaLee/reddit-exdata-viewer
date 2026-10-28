@@ -1,6 +1,6 @@
 import styles from './reader-pagination.module.css'
 
-type ReaderPaginationProps = {
+export type ReaderPaginationProps = {
   page: number
   pageCount: number
   totalRecords: number

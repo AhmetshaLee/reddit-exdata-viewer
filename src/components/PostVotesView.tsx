@@ -16,12 +16,8 @@ import {
   type PostVoteFilters,
 } from '../lib/post-vote-filters'
 import type { PostVote } from '../lib/post-votes'
-import layout from '../pages/index.module.css'
-import PostCard from './PostCard'
-import ReaderLayout from './ReaderLayout'
-import ReaderPagination from './ReaderPagination'
+import PostListView from './PostListView'
 import ReaderToolbar from './ReaderToolbar'
-import styles from './posts.module.css'
 
 type PostVotesViewProps = {
   votes: PostVote[]
@@ -100,52 +96,52 @@ export default function PostVotesView({
   }, [pageCount, updatePage])
 
   return (
-    <ReaderLayout
+    <PostListView
       title="Оценки"
-      sidebar={
-        <>
-          {menu}
-          {pageCount > 0 && (
-            <ReaderPagination
-              page={page}
-              pageCount={pageCount}
-              totalRecords={filteredRecords.length}
-              pageSize={PAGE_SIZE}
-              onPageChange={changePage}
-            />
-          )}
-        </>
+      listLabel="Оценки постов"
+      emptyFileMessage="В файле нет оценок"
+      items={pageRecords.map(({ vote, sourceIndex }) => ({
+        post: vote,
+        sourceIndex,
+      }))}
+      totalRecords={records.length}
+      pagination={{
+        page,
+        pageCount,
+        totalRecords: filteredRecords.length,
+        pageSize: PAGE_SIZE,
+        onPageChange: changePage,
+      }}
+      toolbar={
+        <ReaderToolbar
+          onChooseFile={onChooseFile}
+          disabled={isReading}
+          fileName={fileName}
+          query={filters.query}
+          filterGroups={[
+            {
+              name: 'direction',
+              legend: 'Оценки',
+              choices: voteChoices,
+              selected: filters.direction,
+              onChange: (direction) => changeFilters({ ...filters, direction }),
+            },
+            {
+              name: 'community',
+              legend: 'Сабреддиты',
+              choices: communityChoices,
+              selected: filters.community,
+              onChange: (community) => changeFilters({ ...filters, community }),
+            },
+          ]}
+          totalRecords={records.length}
+          matchedRecords={filteredRecords.length}
+          onQueryChange={(query) => changeFilters({ ...filters, query })}
+          onReset={() => changeFilters(DEFAULT_FILTERS)}
+        />
       }
-    >
-      {feedback}
-      {records.length === 0 && (
-        <p className={layout.message}>В файле нет оценок</p>
-      )}
-      <ReaderToolbar
-        onChooseFile={onChooseFile}
-        disabled={isReading}
-        fileName={fileName}
-        filters={filters}
-        voteChoices={voteChoices}
-        communityChoices={communityChoices}
-        totalRecords={records.length}
-        matchedRecords={filteredRecords.length}
-        onFiltersChange={changeFilters}
-      />
-      <hr className={styles.listDivider} />
-      {records.length > 0 && filteredRecords.length === 0 && (
-        <div className={styles.emptyState}>
-          <p className={styles.emptyMessage}>
-            По выбранным условиям ничего не найдено
-          </p>
-          <div className={styles.emptyIllustration} aria-hidden="true" />
-        </div>
-      )}
-      <ol className={styles.cards} aria-label="Оценки постов" start={start + 1}>
-        {pageRecords.map(({ vote, sourceIndex }) => (
-          <PostCard key={sourceIndex} post={vote} />
-        ))}
-      </ol>
-    </ReaderLayout>
+      menu={menu}
+      feedback={feedback}
+    />
   )
 }
