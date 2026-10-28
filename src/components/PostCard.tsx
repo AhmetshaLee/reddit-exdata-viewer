@@ -1,11 +1,6 @@
+import type { PostListRecord } from '../lib/post-list-filters'
 import { getRedditPostLink } from '../lib/reddit-post-link'
 import styles from './posts.module.css'
-
-export type PostCardData = {
-  id: string
-  permalink: string
-  direction?: string
-}
 
 const directionLabels: Record<string, string> = {
   up: 'Нравится',
@@ -13,7 +8,7 @@ const directionLabels: Record<string, string> = {
   none: 'Не указана',
 }
 
-export default function PostCard({ post }: { post: PostCardData }) {
+export default function PostCard({ post }: { post: PostListRecord }) {
   const link = getRedditPostLink(post.permalink)
   const title = link?.title ?? `Публикация #${post.id}`
   let directionLabel: string | undefined

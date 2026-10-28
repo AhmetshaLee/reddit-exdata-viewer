@@ -6,7 +6,7 @@ import {
 } from '../lib/read-reddit-source'
 import layout from '../pages/index.module.css'
 import FileUploadView from './FileUploadView'
-import PostVotesView from './PostVotesView'
+import PostListView from './PostListView'
 import PreferencesView from './PreferencesView'
 import ReaderMenu from './ReaderMenu'
 
@@ -113,9 +113,13 @@ export default function ArchiveReader() {
     switch (activeFile.type) {
       case 'post-votes':
         return (
-          <PostVotesView
+          <PostListView
             key={opened.sourceId}
-            votes={activeFile.records}
+            title="Оценки"
+            listLabel="Оценки постов"
+            emptyFileMessage="В файле нет оценок"
+            posts={activeFile.records}
+            showRatingFilter
             fileName={opened.fileName}
             menu={menu}
             feedback={feedback}

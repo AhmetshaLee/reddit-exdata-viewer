@@ -1,21 +1,30 @@
-import type { ReactNode } from 'react'
+import { useMemo, type ReactNode } from 'react'
 
+import { useList } from '../hooks/useList'
+import {
+  DEFAULT_FILTERS,
+  filterPosts,
+  getCommunityChoices,
+  getRatingChoices,
+  preparePosts,
+  type PostListRecord,
+} from '../lib/post-list-filters'
 import layout from '../pages/index.module.css'
-import PostCard, { type PostCardData } from './PostCard'
+import PostCard from './PostCard'
 import ReaderLayout from './ReaderLayout'
-import ReaderPagination, {
-  type ReaderPaginationProps,
-} from './ReaderPagination'
+import ReaderPagination from './ReaderPagination'
+import ReaderToolbar, { type ReaderFilterGroup } from './ReaderToolbar'
 import styles from './posts.module.css'
 
 type PostListViewProps = {
   title: string
   listLabel: string
   emptyFileMessage: string
-  items: { post: PostCardData; sourceIndex: number }[]
-  totalRecords: number
-  pagination: ReaderPaginationProps
-  toolbar: ReactNode
+  posts: PostListRecord[]
+  showRatingFilter?: boolean
+  fileName: string
+  isReading: boolean
+  onChooseFile: () => void
   menu: ReactNode
   feedback: ReactNode
 }
@@ -24,14 +33,53 @@ export default function PostListView({
   title,
   listLabel,
   emptyFileMessage,
-  items,
-  totalRecords,
-  pagination,
-  toolbar,
+  posts,
+  showRatingFilter = false,
+  fileName,
+  isReading,
+  onChooseFile,
   menu,
   feedback,
 }: PostListViewProps) {
-  const start = (pagination.page - 1) * pagination.pageSize
+  const records = useMemo(() => preparePosts(posts), [posts])
+  const ratingChoices = useMemo(() => getRatingChoices(records), [records])
+  const communityChoices = useMemo(
+    () => getCommunityChoices(records),
+    [records],
+  )
+  const {
+    filters,
+    page,
+    pageCount,
+    pageSize,
+    pageRecords,
+    matchedRecords,
+    changeFilters,
+    changePage,
+  } = useList({
+    records,
+    initialFilters: DEFAULT_FILTERS,
+    filterRecords: filterPosts,
+  })
+
+  const filterGroups: ReaderFilterGroup[] = []
+  if (showRatingFilter) {
+    filterGroups.push({
+      name: 'direction',
+      legend: 'Оценки',
+      choices: ratingChoices,
+      selected: filters.direction,
+      onChange: (direction) => changeFilters({ ...filters, direction }),
+    })
+  }
+  filterGroups.push({
+    name: 'community',
+    legend: 'Сабреддиты',
+    choices: communityChoices,
+    selected: filters.community,
+    onChange: (community) => changeFilters({ ...filters, community }),
+  })
+  const start = (page - 1) * pageSize
 
   return (
     <ReaderLayout
@@ -39,17 +87,35 @@ export default function PostListView({
       sidebar={
         <>
           {menu}
-          {pagination.pageCount > 0 && <ReaderPagination {...pagination} />}
+          {pageCount > 0 && (
+            <ReaderPagination
+              page={page}
+              pageCount={pageCount}
+              totalRecords={matchedRecords}
+              pageSize={pageSize}
+              onPageChange={changePage}
+            />
+          )}
         </>
       }
     >
       {feedback}
-      {totalRecords === 0 && (
+      {records.length === 0 && (
         <p className={layout.message}>{emptyFileMessage}</p>
       )}
-      {toolbar}
+      <ReaderToolbar
+        onChooseFile={onChooseFile}
+        disabled={isReading}
+        fileName={fileName}
+        query={filters.query}
+        filterGroups={filterGroups}
+        totalRecords={records.length}
+        matchedRecords={matchedRecords}
+        onQueryChange={(query) => changeFilters({ ...filters, query })}
+        onReset={() => changeFilters(DEFAULT_FILTERS)}
+      />
       <hr className={styles.listDivider} />
-      {totalRecords > 0 && pagination.totalRecords === 0 && (
+      {records.length > 0 && matchedRecords === 0 && (
         <div className={styles.emptyState}>
           <p className={styles.emptyMessage}>
             По выбранным условиям ничего не найдено
@@ -58,7 +124,7 @@ export default function PostListView({
         </div>
       )}
       <ol className={styles.cards} aria-label={listLabel} start={start + 1}>
-        {items.map(({ post, sourceIndex }) => (
+        {pageRecords.map(({ post, sourceIndex }) => (
           <PostCard key={sourceIndex} post={post} />
         ))}
       </ol>
