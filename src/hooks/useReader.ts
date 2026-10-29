@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import type { ReaderMenuItemId } from '../components/ReaderMenu'
-import { getPageFromHash, PAGE_SIZE } from '../lib/pagination'
+import { PAGE_SIZE } from '../lib/pagination'
 import {
   DEFAULT_FILTERS,
   filterPostVotes,
@@ -55,7 +55,7 @@ export function useReader() {
       setOpened({ fileName: file.name, records })
       setActiveMenuItem('post-votes')
       setFilters(DEFAULT_FILTERS)
-      resetPage(records.length)
+      setPage(1)
     } catch (cause) {
       setError(
         cause instanceof Error ? cause.message : 'Не удалось открыть файл.',
@@ -65,22 +65,13 @@ export function useReader() {
     }
   }
 
-  function resetPage(recordCount: number) {
-    setPage(1)
-    const url = recordCount
-      ? '#1'
-      : window.location.pathname + window.location.search
-    window.history.replaceState(window.history.state, '', url)
-  }
-
   function changeFilters(nextFilters: PostVoteFilters) {
     setFilters(nextFilters)
-    resetPage(records.length)
+    setPage(1)
   }
 
   function changePage(nextPage: number) {
     if (nextPage < 1 || nextPage > pageCount || nextPage === page) return
-    window.history.pushState(window.history.state, '', `#${nextPage}`)
     setPage(nextPage)
   }
 
@@ -116,24 +107,6 @@ export function useReader() {
           onPageChange: changePage,
         }
       : null
-
-  useEffect(() => {
-    if (pageCount === 0) return
-
-    const handleHashChange = () => {
-      const nextPage = getPageFromHash(window.location.hash, pageCount)
-      const hash = `#${nextPage}`
-      if (window.location.hash !== hash) {
-        window.history.replaceState(window.history.state, '', hash)
-      }
-      setPage(nextPage)
-    }
-
-    window.addEventListener('hashchange', handleHashChange)
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange)
-    }
-  }, [pageCount])
 
   return {
     content,
