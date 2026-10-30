@@ -23,6 +23,7 @@ export function useReader() {
   const [isReading, setIsReading] = useState(false)
   const [error, setError] = useState('')
   const [page, setPage] = useState(1)
+  const [query, setQuery] = useState('')
   const [filters, setFilters] = useState(DEFAULT_FILTERS)
   const [activeMenuItem, setActiveMenuItem] = useState<ReaderMenuItemId | null>(
     null,
@@ -33,8 +34,8 @@ export function useReader() {
     [opened],
   )
   const filteredRecords = useMemo(
-    () => filterPostVotes(records, filters),
-    [records, filters],
+    () => filterPostVotes(records, query, filters),
+    [records, query, filters],
   )
   const voteChoices = useMemo(() => getVoteChoices(records), [records])
   const communityChoices = useMemo(
@@ -54,6 +55,7 @@ export function useReader() {
       const records = data[0].records
       setOpened({ fileName: file.name, records })
       setActiveMenuItem('post-votes')
+      setQuery('')
       setFilters(DEFAULT_FILTERS)
       setPage(1)
     } catch (cause) {
@@ -63,6 +65,11 @@ export function useReader() {
     } finally {
       setIsReading(false)
     }
+  }
+
+  function changeQuery(nextQuery: string) {
+    setQuery(nextQuery)
+    setPage(1)
   }
 
   function changeFilters(nextFilters: PostVoteFilters) {
@@ -84,6 +91,8 @@ export function useReader() {
     opened && activeMenuItem === 'post-votes'
       ? {
           fileName: opened.fileName,
+          query,
+          onQueryChange: changeQuery,
           filtering: {
             values: filters,
             voteChoices,

@@ -2,7 +2,6 @@ import type { PostVote } from './post-votes'
 import { getRedditPostLink } from './reddit-post-link'
 
 export type PostVoteFilters = {
-  query: string
   direction: string
   community: string
 }
@@ -22,7 +21,6 @@ export type PostVoteEntry = {
 }
 
 export const DEFAULT_FILTERS: PostVoteFilters = {
-  query: '',
   direction: 'all',
   community: 'all',
 }
@@ -47,15 +45,16 @@ export function preparePostVotes(records: PostVote[]): PostVoteEntry[] {
 
 export function filterPostVotes(
   records: PostVoteEntry[],
+  query: string,
   filters: PostVoteFilters,
 ): PostVoteEntry[] {
-  const query = filters.query.trim().toLowerCase()
+  const search = query.trim().toLowerCase()
 
   return records.filter(
     ({ vote, community, searchText }) =>
       (filters.direction === 'all' || vote.direction === filters.direction) &&
       (filters.community === 'all' || community === filters.community) &&
-      searchText.includes(query),
+      searchText.includes(search),
   )
 }
 

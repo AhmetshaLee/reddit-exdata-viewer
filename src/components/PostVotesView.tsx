@@ -5,6 +5,8 @@ import styles from './posts.module.css'
 
 type PostVotesViewProps = {
   fileName: string
+  query: string
+  onQueryChange: (query: string) => void
   filtering: PostVoteFiltering
   totalRecords: number
   matchedRecords: number
@@ -16,6 +18,8 @@ type PostVotesViewProps = {
 
 export default function PostVotesView({
   fileName,
+  query,
+  onQueryChange,
   filtering,
   totalRecords,
   matchedRecords,
@@ -30,6 +34,8 @@ export default function PostVotesView({
         <p className={styles.message}>В файле нет оценок</p>
       )}
       <ReaderToolbar
+        query={query}
+        onQueryChange={onQueryChange}
         filtering={filtering}
         fileName={fileName}
         disabled={disabled}

@@ -17,6 +17,8 @@ type ReaderToolbarProps = {
   onFileSelected: (file: File) => void
   disabled: boolean
   fileName: string
+  query: string
+  onQueryChange: (query: string) => void
   filtering: PostVoteFiltering
   totalRecords: number
   matchedRecords: number
@@ -26,6 +28,8 @@ export default function ReaderToolbar({
   onFileSelected,
   disabled,
   fileName,
+  query,
+  onQueryChange,
   filtering,
   totalRecords,
   matchedRecords,
@@ -69,6 +73,7 @@ export default function ReaderToolbar({
         onSubmit={(event) => event.preventDefault()}
         onReset={(event) => {
           event.preventDefault()
+          onQueryChange('')
           onChange(DEFAULT_FILTERS)
         }}
       >
@@ -79,11 +84,9 @@ export default function ReaderToolbar({
             type="search"
             name="search"
             placeholder="Поиск по названию, ссылке или ID поста"
-            value={values.query}
+            value={query}
             disabled={disabled}
-            onChange={(event) =>
-              onChange({ ...values, query: event.currentTarget.value })
-            }
+            onChange={(event) => onQueryChange(event.currentTarget.value)}
           />
         </label>
         <div className={styles.filterRow}>
