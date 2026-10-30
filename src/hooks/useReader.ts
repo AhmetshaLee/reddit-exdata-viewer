@@ -10,29 +10,34 @@ import {
   preparePostVotes,
   type PostVoteFilters,
 } from '../lib/post-vote-filters'
-import type { PostVote } from '../lib/post-votes'
 import { readRedditSource } from '../lib/read-reddit-source'
+import {
+  createReaderFiles,
+  type ReaderConditions,
+  type ReaderFile,
+} from '../lib/reader-file'
 
-type OpenedVotes = {
+type OpenedSource = {
   fileName: string
-  records: PostVote[]
+  files: ReaderFile[]
 }
 
 export function useReader() {
-  const [opened, setOpened] = useState<OpenedVotes | null>(null)
+  const [opened, setOpened] = useState<OpenedSource | null>(null)
   const [isReading, setIsReading] = useState(false)
   const [error, setError] = useState('')
-  const [page, setPage] = useState(1)
-  const [query, setQuery] = useState('')
-  const [filters, setFilters] = useState(DEFAULT_FILTERS)
   const [activeMenuItem, setActiveMenuItem] = useState<ReaderMenuItemId | null>(
     null,
   )
 
-  const records = useMemo(
-    () => preparePostVotes(opened?.records ?? []),
-    [opened],
-  )
+  const selection =
+    opened?.files.find((item) => item.file.type === activeMenuItem) ?? null
+  const file = selection?.file
+  const query = selection?.conditions.query ?? ''
+  const filters = selection?.conditions.filters ?? DEFAULT_FILTERS
+  const page = selection?.conditions.page ?? 1
+
+  const records = useMemo(() => preparePostVotes(file?.records ?? []), [file])
   const filteredRecords = useMemo(
     () => filterPostVotes(records, query, filters),
     [records, query, filters],
@@ -45,19 +50,17 @@ export function useReader() {
   const pageCount = Math.ceil(filteredRecords.length / PAGE_SIZE)
   const start = (page - 1) * PAGE_SIZE
   const pageRecords = filteredRecords.slice(start, start + PAGE_SIZE)
-  const availableMenuItems: ReaderMenuItemId[] = opened ? ['post-votes'] : []
+  const availableMenuItems: ReaderMenuItemId[] =
+    opened?.files.map((item) => item.file.type) ?? []
 
   async function openFile(file: File) {
     setIsReading(true)
     setError('')
     try {
       const data = await readRedditSource(file)
-      const records = data[0].records
-      setOpened({ fileName: file.name, records })
-      setActiveMenuItem('post-votes')
-      setQuery('')
-      setFilters(DEFAULT_FILTERS)
-      setPage(1)
+      const files = createReaderFiles(data)
+      setOpened({ fileName: file.name, files })
+      setActiveMenuItem(files[0].file.type)
     } catch (cause) {
       setError(
         cause instanceof Error ? cause.message : 'Не удалось открыть файл.',
@@ -67,19 +70,35 @@ export function useReader() {
     }
   }
 
-  function changeQuery(nextQuery: string) {
-    setQuery(nextQuery)
-    setPage(1)
+  function updateSelectedConditions(
+    update: (conditions: ReaderConditions) => ReaderConditions,
+  ) {
+    if (!selection) return
+    const type = selection.file.type
+    setOpened((previous) => {
+      if (!previous) return previous
+      return {
+        ...previous,
+        files: previous.files.map((item) =>
+          item.file.type === type
+            ? { ...item, conditions: update(item.conditions) }
+            : item,
+        ),
+      }
+    })
   }
 
-  function changeFilters(nextFilters: PostVoteFilters) {
-    setFilters(nextFilters)
-    setPage(1)
+  function changeQuery(query: string) {
+    updateSelectedConditions((current) => ({ ...current, query, page: 1 }))
+  }
+
+  function changeFilters(filters: PostVoteFilters) {
+    updateSelectedConditions((current) => ({ ...current, filters, page: 1 }))
   }
 
   function changePage(nextPage: number) {
     if (nextPage < 1 || nextPage > pageCount || nextPage === page) return
-    setPage(nextPage)
+    updateSelectedConditions((current) => ({ ...current, page: nextPage }))
   }
 
   function selectMenuItem(id: ReaderMenuItemId) {
@@ -88,7 +107,7 @@ export function useReader() {
   }
 
   const content =
-    opened && activeMenuItem === 'post-votes'
+    opened && selection
       ? {
           fileName: opened.fileName,
           query,
