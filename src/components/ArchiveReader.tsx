@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useReader } from '../hooks/useReader'
 import layout from '../pages/index.module.css'
 import FileUploadView from './FileUploadView'
-import PostVotesView from './PostVotesView'
+import PostListView from './PostListView'
 import ReaderLayout from './ReaderLayout'
 import ReaderMenu from './ReaderMenu'
 import ReaderPagination from './ReaderPagination'
@@ -53,10 +53,11 @@ export default function ArchiveReader() {
 
     switch (activeMenuItem) {
       case 'post-votes':
+      case 'saved':
         return (
           <>
             {feedback}
-            <PostVotesView
+            <PostListView
               {...content}
               disabled={isReading}
               onFileSelected={openFile}
@@ -83,7 +84,7 @@ export default function ArchiveReader() {
 
   return (
     <ReaderLayout
-      title={content ? 'Оценки' : 'Ваш архив Reddit'}
+      title={content ? content.title : 'Ваш архив Reddit'}
       menu={
         <>
           <div className={layout.sidebarPanel}>

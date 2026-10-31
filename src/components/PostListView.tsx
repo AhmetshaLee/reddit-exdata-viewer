@@ -1,25 +1,29 @@
-import type { PostVoteEntry } from '../lib/post-vote-filters'
+import type { PostEntry } from '../lib/post-list'
 import PostCard from './PostCard'
-import ReaderToolbar, { type PostVoteFiltering } from './ReaderToolbar'
+import ReaderToolbar, { type PostFiltering } from './ReaderToolbar'
 import styles from './posts.module.css'
 
-type PostVotesViewProps = {
+type PostListViewProps = {
+  title: string
   fileName: string
   query: string
   onQueryChange: (query: string) => void
-  filtering: PostVoteFiltering
+  onReset: () => void
+  filtering: PostFiltering
   totalRecords: number
   matchedRecords: number
-  pageRecords: PostVoteEntry[]
+  pageRecords: PostEntry[]
   start: number
   disabled: boolean
   onFileSelected: (file: File) => void
 }
 
-export default function PostVotesView({
+export default function PostListView({
+  title,
   fileName,
   query,
   onQueryChange,
+  onReset,
   filtering,
   totalRecords,
   matchedRecords,
@@ -27,15 +31,16 @@ export default function PostVotesView({
   start,
   disabled,
   onFileSelected,
-}: PostVotesViewProps) {
+}: PostListViewProps) {
   return (
     <>
       {totalRecords === 0 && (
-        <p className={styles.message}>В файле нет оценок</p>
+        <p className={styles.message}>В файле нет постов</p>
       )}
       <ReaderToolbar
         query={query}
         onQueryChange={onQueryChange}
+        onReset={onReset}
         filtering={filtering}
         fileName={fileName}
         disabled={disabled}
@@ -52,9 +57,9 @@ export default function PostVotesView({
           <div className={styles.emptyIllustration} aria-hidden="true" />
         </div>
       )}
-      <ol className={styles.cards} aria-label="Оценки постов" start={start + 1}>
-        {pageRecords.map(({ vote, sourceIndex }) => (
-          <PostCard key={sourceIndex} post={vote} />
+      <ol className={styles.cards} aria-label={title} start={start + 1}>
+        {pageRecords.map(({ record, sourceIndex }) => (
+          <PostCard key={sourceIndex} post={record} />
         ))}
       </ol>
     </>

@@ -1,13 +1,13 @@
 import { unzipRaw, type ZipEntry, type ZipInfoRaw } from 'unzipit'
 
 import { parsePostVotes, type PostVote } from './post-votes'
+import { parsePostReferences, type PostReference } from './post-references'
 
-const SUPPORTED_CSV_FILES = ['post_votes.csv']
+const SUPPORTED_CSV_FILES = ['post_votes.csv', 'saved_posts.csv']
 
-export type RedditFileData = {
-  type: 'post-votes'
-  records: PostVote[]
-}
+export type RedditFileData =
+  | { type: 'post-votes'; records: PostVote[] }
+  | { type: 'saved-posts'; records: PostReference[] }
 
 export async function readRedditSource(file: File): Promise<RedditFileData[]> {
   const name = file.name.toLowerCase()
@@ -32,6 +32,9 @@ export async function readRedditSource(file: File): Promise<RedditFileData[]> {
 function parseRedditFile(name: string, text: string): RedditFileData {
   if (name === 'post_votes.csv') {
     return { type: 'post-votes', records: parsePostVotes(text) }
+  }
+  if (name === 'saved_posts.csv') {
+    return { type: 'saved-posts', records: parsePostReferences(text) }
   }
   throw new Error(`Файл ${name} не поддерживается.`)
 }

@@ -3,16 +3,20 @@ import { useMemo, useState } from 'react'
 import type { ReaderMenuItemId } from '../components/ReaderMenu'
 import { PAGE_SIZE } from '../lib/pagination'
 import {
-  DEFAULT_FILTERS,
-  filterPostVotes,
+  DEFAULT_VOTE_FILTERS,
+  filterPosts,
   getCommunityChoices,
   getVoteChoices,
-  preparePostVotes,
-  type PostVoteFilters,
-} from '../lib/post-vote-filters'
-import { readRedditSource } from '../lib/read-reddit-source'
+  preparePosts,
+  type PostFilters,
+} from '../lib/post-list'
+import {
+  readRedditSource,
+  type RedditFileData,
+} from '../lib/read-reddit-source'
 import {
   createReaderFiles,
+  createConditions,
   type ReaderConditions,
   type ReaderFile,
 } from '../lib/reader-file'
@@ -20,6 +24,11 @@ import {
 type OpenedSource = {
   fileName: string
   files: ReaderFile[]
+}
+
+const FILE_MENU_ITEMS: Record<RedditFileData['type'], ReaderMenuItemId> = {
+  'post-votes': 'post-votes',
+  'saved-posts': 'saved',
 }
 
 export function useReader() {
@@ -31,18 +40,23 @@ export function useReader() {
   )
 
   const selection =
-    opened?.files.find((item) => item.file.type === activeMenuItem) ?? null
+    opened?.files.find(
+      (item) => FILE_MENU_ITEMS[item.file.type] === activeMenuItem,
+    ) ?? null
   const file = selection?.file
   const query = selection?.conditions.query ?? ''
-  const filters = selection?.conditions.filters ?? DEFAULT_FILTERS
+  const filters = selection?.conditions.filters ?? DEFAULT_VOTE_FILTERS
   const page = selection?.conditions.page ?? 1
 
-  const records = useMemo(() => preparePostVotes(file?.records ?? []), [file])
+  const records = useMemo(() => preparePosts(file?.records ?? []), [file])
   const filteredRecords = useMemo(
-    () => filterPostVotes(records, query, filters),
+    () => filterPosts(records, query, filters),
     [records, query, filters],
   )
-  const voteChoices = useMemo(() => getVoteChoices(records), [records])
+  const voteChoices = useMemo(
+    () => (file?.type === 'post-votes' ? getVoteChoices(records) : undefined),
+    [file, records],
+  )
   const communityChoices = useMemo(
     () => getCommunityChoices(records),
     [records],
@@ -51,7 +65,7 @@ export function useReader() {
   const start = (page - 1) * PAGE_SIZE
   const pageRecords = filteredRecords.slice(start, start + PAGE_SIZE)
   const availableMenuItems: ReaderMenuItemId[] =
-    opened?.files.map((item) => item.file.type) ?? []
+    opened?.files.map((item) => FILE_MENU_ITEMS[item.file.type]) ?? []
 
   async function openFile(file: File) {
     setIsReading(true)
@@ -60,7 +74,9 @@ export function useReader() {
       const data = await readRedditSource(file)
       const files = createReaderFiles(data)
       setOpened({ fileName: file.name, files })
-      setActiveMenuItem(files[0].file.type)
+      const firstFile =
+        files.find((item) => item.file.type === 'post-votes') ?? files[0]
+      setActiveMenuItem(FILE_MENU_ITEMS[firstFile.file.type])
     } catch (cause) {
       setError(
         cause instanceof Error ? cause.message : 'Не удалось открыть файл.',
@@ -92,8 +108,13 @@ export function useReader() {
     updateSelectedConditions((current) => ({ ...current, query, page: 1 }))
   }
 
-  function changeFilters(filters: PostVoteFilters) {
+  function changeFilters(filters: PostFilters) {
     updateSelectedConditions((current) => ({ ...current, filters, page: 1 }))
+  }
+
+  function resetConditions() {
+    if (!selection) return
+    updateSelectedConditions(() => createConditions(selection.file.type))
   }
 
   function changePage(nextPage: number) {
@@ -110,8 +131,13 @@ export function useReader() {
     opened && selection
       ? {
           fileName: opened.fileName,
+          title:
+            selection.file.type === 'post-votes'
+              ? 'Оценки'
+              : 'Сохранённые посты',
           query,
           onQueryChange: changeQuery,
+          onReset: resetConditions,
           filtering: {
             values: filters,
             voteChoices,

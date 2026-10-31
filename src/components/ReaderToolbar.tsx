@@ -1,16 +1,12 @@
-import {
-  DEFAULT_FILTERS,
-  type FilterChoice,
-  type PostVoteFilters,
-} from '../lib/post-vote-filters'
+import type { FilterChoice, PostFilters } from '../lib/post-list'
 import FilePickerButton from './FilePickerButton'
 import styles from './reader-toolbar.module.css'
 
-export type PostVoteFiltering = {
-  values: PostVoteFilters
-  voteChoices: FilterChoice[]
+export type PostFiltering = {
+  values: PostFilters
+  voteChoices?: FilterChoice[]
   communityChoices: FilterChoice[]
-  onChange: (values: PostVoteFilters) => void
+  onChange: (values: PostFilters) => void
 }
 
 type ReaderToolbarProps = {
@@ -19,7 +15,8 @@ type ReaderToolbarProps = {
   fileName: string
   query: string
   onQueryChange: (query: string) => void
-  filtering: PostVoteFiltering
+  filtering: PostFiltering
+  onReset: () => void
   totalRecords: number
   matchedRecords: number
 }
@@ -31,18 +28,12 @@ export default function ReaderToolbar({
   query,
   onQueryChange,
   filtering,
+  onReset,
   totalRecords,
   matchedRecords,
 }: ReaderToolbarProps) {
   const { values, voteChoices, communityChoices, onChange } = filtering
   const groups = [
-    {
-      name: 'direction',
-      legend: 'Оценки',
-      choices: voteChoices,
-      selected: values.direction,
-      onChange: (direction: string) => onChange({ ...values, direction }),
-    },
     {
       name: 'community',
       legend: 'Сабреддиты',
@@ -51,6 +42,15 @@ export default function ReaderToolbar({
       onChange: (community: string) => onChange({ ...values, community }),
     },
   ]
+  if (voteChoices) {
+    groups.unshift({
+      name: 'direction',
+      legend: 'Оценки',
+      choices: voteChoices,
+      selected: values.direction ?? 'all',
+      onChange: (direction: string) => onChange({ ...values, direction }),
+    })
+  }
 
   return (
     <section className={styles.toolbar} aria-label="Панель поиска и фильтров">
@@ -73,8 +73,7 @@ export default function ReaderToolbar({
         onSubmit={(event) => event.preventDefault()}
         onReset={(event) => {
           event.preventDefault()
-          onQueryChange('')
-          onChange(DEFAULT_FILTERS)
+          onReset()
         }}
       >
         <label className={styles.searchField}>

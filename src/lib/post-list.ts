@@ -1,8 +1,7 @@
-import type { PostVote } from './post-votes'
 import { getRedditPostLink } from './reddit-post-link'
 
-export type PostVoteFilters = {
-  direction: string
+export type PostFilters = {
+  direction?: string
   community: string
 }
 
@@ -12,58 +11,64 @@ export type FilterChoice = {
   count: number
 }
 
-export type PostVoteEntry = {
-  vote: PostVote
+export type PostRecord = { id: string; permalink: string; direction?: string }
+
+export type PostEntry = {
+  record: PostRecord
   sourceIndex: number
   community: string
   communityLabel: string
   searchText: string
 }
 
-export const DEFAULT_FILTERS: PostVoteFilters = {
+export const DEFAULT_POST_FILTERS: PostFilters = { community: 'all' }
+
+export const DEFAULT_VOTE_FILTERS: PostFilters = {
   direction: 'all',
   community: 'all',
 }
 
-export function preparePostVotes(records: PostVote[]): PostVoteEntry[] {
-  return records.map((vote, sourceIndex) => {
-    const link = getRedditPostLink(vote.permalink)
+export function preparePosts(records: PostRecord[]): PostEntry[] {
+  return records.map((record, sourceIndex) => {
+    const link = getRedditPostLink(record.permalink)
     const communityLabel = link?.subreddit
       ? `r/${link.subreddit}`
       : 'Сабреддит не указан'
 
     return {
-      vote,
+      record,
       sourceIndex,
       community: link?.subreddit ? communityLabel.toLowerCase() : 'unknown',
       communityLabel,
       searchText:
-        `${vote.id} ${vote.permalink} ${link?.title ?? ''}`.toLowerCase(),
+        `${record.id} ${record.permalink} ${link?.title ?? ''}`.toLowerCase(),
     }
   })
 }
 
-export function filterPostVotes(
-  records: PostVoteEntry[],
+export function filterPosts(
+  records: PostEntry[],
   query: string,
-  filters: PostVoteFilters,
-): PostVoteEntry[] {
+  filters: PostFilters,
+): PostEntry[] {
   const search = query.trim().toLowerCase()
 
   return records.filter(
-    ({ vote, community, searchText }) =>
-      (filters.direction === 'all' || vote.direction === filters.direction) &&
+    ({ record, community, searchText }) =>
+      (!filters.direction ||
+        filters.direction === 'all' ||
+        record.direction === filters.direction) &&
       (filters.community === 'all' || community === filters.community) &&
       searchText.includes(search),
   )
 }
 
-export function getVoteChoices(records: PostVoteEntry[]): FilterChoice[] {
+export function getVoteChoices(records: PostEntry[]): FilterChoice[] {
   let upCount = 0
   let downCount = 0
-  for (const { vote } of records) {
-    if (vote.direction === 'up') upCount += 1
-    else if (vote.direction === 'down') downCount += 1
+  for (const { record } of records) {
+    if (record.direction === 'up') upCount += 1
+    else if (record.direction === 'down') downCount += 1
   }
 
   return [
@@ -73,7 +78,7 @@ export function getVoteChoices(records: PostVoteEntry[]): FilterChoice[] {
   ]
 }
 
-export function getCommunityChoices(records: PostVoteEntry[]): FilterChoice[] {
+export function getCommunityChoices(records: PostEntry[]): FilterChoice[] {
   const communities = new Map<string, FilterChoice>()
   for (const { community, communityLabel } of records) {
     const choice = communities.get(community)
