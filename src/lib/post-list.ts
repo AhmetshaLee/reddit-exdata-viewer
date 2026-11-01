@@ -16,6 +16,8 @@ export type PostRecord = { id: string; permalink: string; direction?: string }
 export type PostEntry = {
   record: PostRecord
   sourceIndex: number
+  href: string | null
+  title: string
   community: string
   communityLabel: string
   searchText: string
@@ -38,6 +40,8 @@ export function preparePosts(records: PostRecord[]): PostEntry[] {
     return {
       record,
       sourceIndex,
+      href: link?.href ?? null,
+      title: link?.title ?? `Публикация #${record.id}`,
       community: link?.subreddit ? communityLabel.toLowerCase() : 'unknown',
       communityLabel,
       searchText:

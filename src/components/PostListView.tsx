@@ -58,8 +58,8 @@ export default function PostListView({
         </div>
       )}
       <ol className={styles.cards} aria-label={title} start={start + 1}>
-        {pageRecords.map(({ record, sourceIndex }) => (
-          <PostCard key={sourceIndex} post={record} />
+        {pageRecords.map((entry) => (
+          <PostCard key={entry.sourceIndex} post={entry} />
         ))}
       </ol>
     </>

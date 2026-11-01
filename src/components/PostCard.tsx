@@ -1,5 +1,4 @@
-import type { PostRecord } from '../lib/post-list'
-import { getRedditPostLink } from '../lib/reddit-post-link'
+import type { PostEntry } from '../lib/post-list'
 import styles from './posts.module.css'
 
 const directionLabels: Record<string, string> = {
@@ -8,30 +7,29 @@ const directionLabels: Record<string, string> = {
   none: 'Не указана',
 }
 
-export default function PostCard({ post }: { post: PostRecord }) {
-  const link = getRedditPostLink(post.permalink)
-  const title = link?.title ?? `Публикация #${post.id}`
-  let directionLabel = post.direction
+export default function PostCard({ post }: { post: PostEntry }) {
+  const { record, href, title, communityLabel } = post
+  let directionLabel = record.direction
   if (
-    post.direction !== undefined &&
-    Object.hasOwn(directionLabels, post.direction)
+    record.direction !== undefined &&
+    Object.hasOwn(directionLabels, record.direction)
   ) {
-    directionLabel = directionLabels[post.direction]
+    directionLabel = directionLabels[record.direction]
   }
 
   const content = (
     <>
-      <p className={styles.subreddit} title={link?.subreddit ?? undefined}>
-        {link?.subreddit ? `r/${link.subreddit}` : 'Сообщество не указано'}
+      <p className={styles.subreddit} title={communityLabel}>
+        {communityLabel}
       </p>
       <h2 className={styles.cardTitle} title={title}>
         {title}
       </h2>
       <div className={styles.cardMeta}>
-        <span className={styles.cardId} title={post.id}>
-          #{post.id}
+        <span className={styles.cardId} title={record.id}>
+          #{record.id}
         </span>
-        {post.direction !== undefined && (
+        {record.direction !== undefined && (
           <span
             className={styles.direction}
             title={`Ваша оценка: ${directionLabel}`}
@@ -45,10 +43,10 @@ export default function PostCard({ post }: { post: PostRecord }) {
 
   return (
     <li>
-      {link ? (
+      {href ? (
         <a
           className={styles.card}
-          href={link.href}
+          href={href}
           target="_blank"
           rel="noopener noreferrer"
         >
