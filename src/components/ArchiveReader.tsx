@@ -54,6 +54,7 @@ export default function ArchiveReader() {
     switch (activeMenuItem) {
       case 'post-votes':
       case 'saved':
+      case 'hidden':
         return (
           <>
             {feedback}

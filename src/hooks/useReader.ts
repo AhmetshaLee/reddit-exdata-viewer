@@ -29,6 +29,13 @@ type OpenedSource = {
 const FILE_MENU_ITEMS: Record<RedditFileData['type'], ReaderMenuItemId> = {
   'post-votes': 'post-votes',
   'saved-posts': 'saved',
+  'hidden-posts': 'hidden',
+}
+
+const FILE_TITLES: Record<RedditFileData['type'], string> = {
+  'post-votes': 'Оценки',
+  'saved-posts': 'Сохранённые посты',
+  'hidden-posts': 'Скрытые посты',
 }
 
 export function useReader() {
@@ -131,10 +138,7 @@ export function useReader() {
     opened && selection
       ? {
           fileName: opened.fileName,
-          title:
-            selection.file.type === 'post-votes'
-              ? 'Оценки'
-              : 'Сохранённые посты',
+          title: FILE_TITLES[selection.file.type],
           query,
           onQueryChange: changeQuery,
           onReset: resetConditions,
