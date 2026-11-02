@@ -1,12 +1,13 @@
-import type { FilterChoice, PostFilters } from '../lib/post-list'
+import type { FilterChoice } from '../lib/filter-choices'
+import type { ListFilters } from '../lib/list-filters'
 import FilePickerButton from './FilePickerButton'
 import styles from './reader-toolbar.module.css'
 
 export type PostFiltering = {
-  values: PostFilters
+  values: ListFilters
   voteChoices?: FilterChoice[]
   communityChoices: FilterChoice[]
-  onChange: (values: PostFilters) => void
+  onChange: (values: ListFilters) => void
 }
 
 type ReaderToolbarProps = {

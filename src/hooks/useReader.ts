@@ -2,14 +2,13 @@ import { useMemo, useState } from 'react'
 
 import type { ReaderMenuItemId } from '../components/ReaderMenu'
 import { PAGE_SIZE } from '../lib/pagination'
+import { getCommunityChoices, getVoteChoices } from '../lib/filter-choices'
 import {
   DEFAULT_VOTE_FILTERS,
-  filterPosts,
-  getCommunityChoices,
-  getVoteChoices,
-  preparePosts,
-  type PostFilters,
-} from '../lib/post-list'
+  filterList,
+  type ListFilters,
+} from '../lib/list-filters'
+import { preparePosts } from '../lib/post-list'
 import {
   readRedditSource,
   type RedditFileData,
@@ -57,11 +56,14 @@ export function useReader() {
 
   const records = useMemo(() => preparePosts(file?.records ?? []), [file])
   const filteredRecords = useMemo(
-    () => filterPosts(records, query, filters),
+    () => filterList(records, query, filters),
     [records, query, filters],
   )
   const voteChoices = useMemo(
-    () => (file?.type === 'post-votes' ? getVoteChoices(records) : undefined),
+    () =>
+      file?.type === 'post-votes'
+        ? getVoteChoices(records.map(({ record }) => record.direction))
+        : undefined,
     [file, records],
   )
   const communityChoices = useMemo(
@@ -115,7 +117,7 @@ export function useReader() {
     updateSelectedConditions((current) => ({ ...current, query, page: 1 }))
   }
 
-  function changeFilters(filters: PostFilters) {
+  function changeFilters(filters: ListFilters) {
     updateSelectedConditions((current) => ({ ...current, filters, page: 1 }))
   }
 

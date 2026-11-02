@@ -1,13 +1,13 @@
 import {
-  DEFAULT_POST_FILTERS,
+  DEFAULT_LIST_FILTERS,
   DEFAULT_VOTE_FILTERS,
-  type PostFilters,
-} from './post-list'
+  type ListFilters,
+} from './list-filters'
 import type { RedditFileData } from './read-reddit-source'
 
 export type ReaderConditions = {
   query: string
-  filters: PostFilters
+  filters: ListFilters
   page: number
 }
 
@@ -22,7 +22,7 @@ export function createConditions(
   return {
     query: '',
     filters:
-      type === 'post-votes' ? DEFAULT_VOTE_FILTERS : DEFAULT_POST_FILTERS,
+      type === 'post-votes' ? DEFAULT_VOTE_FILTERS : DEFAULT_LIST_FILTERS,
     page: 1,
   }
 }
