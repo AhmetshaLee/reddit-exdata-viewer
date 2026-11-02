@@ -2,13 +2,12 @@ import { useMemo, useState } from 'react'
 
 import type { ReaderMenuItemId } from '../components/ReaderMenu'
 import { PAGE_SIZE } from '../lib/pagination'
-import { getCommunityChoices, getVoteChoices } from '../lib/filter-choices'
+import { DEFAULT_VOTE_FILTERS, type ListFilters } from '../lib/list-filters'
 import {
-  DEFAULT_VOTE_FILTERS,
-  filterList,
-  type ListFilters,
-} from '../lib/list-filters'
-import { preparePosts } from '../lib/post-list'
+  prepareContent,
+  filterContent,
+  getContentResult,
+} from '../lib/reader-content'
 import {
   readRedditSource,
   type RedditFileData,
@@ -49,30 +48,23 @@ export function useReader() {
     opened?.files.find(
       (item) => FILE_MENU_ITEMS[item.file.type] === activeMenuItem,
     ) ?? null
+
   const file = selection?.file
   const query = selection?.conditions.query ?? ''
   const filters = selection?.conditions.filters ?? DEFAULT_VOTE_FILTERS
   const page = selection?.conditions.page ?? 1
 
-  const records = useMemo(() => preparePosts(file?.records ?? []), [file])
-  const filteredRecords = useMemo(
-    () => filterList(records, query, filters),
-    [records, query, filters],
+  const prepared = useMemo(() => (file ? prepareContent(file) : null), [file])
+  const matched = useMemo(
+    () => (prepared ? filterContent(prepared, query, filters) : null),
+    [prepared, query, filters],
   )
-  const voteChoices = useMemo(
-    () =>
-      file?.type === 'post-votes'
-        ? getVoteChoices(records.map(({ record }) => record.direction))
-        : undefined,
-    [file, records],
-  )
-  const communityChoices = useMemo(
-    () => getCommunityChoices(records),
-    [records],
-  )
-  const pageCount = Math.ceil(filteredRecords.length / PAGE_SIZE)
-  const start = (page - 1) * PAGE_SIZE
-  const pageRecords = filteredRecords.slice(start, start + PAGE_SIZE)
+
+  const list =
+    file && matched
+      ? getContentResult(matched, file.records.length, page)
+      : null
+
   const availableMenuItems: ReaderMenuItemId[] =
     opened?.files.map((item) => FILE_MENU_ITEMS[item.file.type]) ?? []
 
@@ -127,7 +119,13 @@ export function useReader() {
   }
 
   function changePage(nextPage: number) {
-    if (nextPage < 1 || nextPage > pageCount || nextPage === page) return
+    if (
+      !list ||
+      nextPage < 1 ||
+      nextPage > list.pageCount ||
+      nextPage === list.page
+    )
+      return
     updateSelectedConditions((current) => ({ ...current, page: nextPage }))
   }
 
@@ -137,7 +135,7 @@ export function useReader() {
   }
 
   const content =
-    opened && selection
+    opened && selection && list
       ? {
           fileName: opened.fileName,
           title: FILE_TITLES[selection.file.type],
@@ -145,24 +143,24 @@ export function useReader() {
           onQueryChange: changeQuery,
           onReset: resetConditions,
           filtering: {
-            values: filters,
-            voteChoices,
-            communityChoices,
+            values: list.filters,
+            voteChoices: list.voteChoices,
+            communityChoices: list.communityChoices,
             onChange: changeFilters,
           },
-          totalRecords: records.length,
-          matchedRecords: filteredRecords.length,
-          pageRecords,
-          start,
+          totalRecords: list.totalRecords,
+          matchedRecords: list.matchedRecords,
+          pageRecords: list.pageRecords,
+          start: list.start,
         }
       : null
 
   const pagination =
-    content && pageCount > 0
+    content && list && list.pageCount > 0
       ? {
-          page,
-          pageCount,
-          totalRecords: filteredRecords.length,
+          page: list.page,
+          pageCount: list.pageCount,
+          totalRecords: list.matchedRecords,
           pageSize: PAGE_SIZE,
           onPageChange: changePage,
         }
