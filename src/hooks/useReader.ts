@@ -3,11 +3,7 @@ import { useMemo, useState } from 'react'
 import type { ReaderMenuItemId } from '../components/ReaderMenu'
 import { PAGE_SIZE } from '../lib/pagination'
 import { DEFAULT_VOTE_FILTERS, type ListFilters } from '../lib/list-filters'
-import {
-  prepareContent,
-  filterContent,
-  getContentResult,
-} from '../lib/reader-content'
+import { filterContent, getContentResult } from '../lib/reader-content'
 import {
   readRedditSource,
   type RedditFileData,
@@ -54,10 +50,9 @@ export function useReader() {
   const filters = selection?.conditions.filters ?? DEFAULT_VOTE_FILTERS
   const page = selection?.conditions.page ?? 1
 
-  const prepared = useMemo(() => (file ? prepareContent(file) : null), [file])
   const matched = useMemo(
-    () => (prepared ? filterContent(prepared, query, filters) : null),
-    [prepared, query, filters],
+    () => (file ? filterContent(file, query, filters) : null),
+    [file, query, filters],
   )
 
   const list =
