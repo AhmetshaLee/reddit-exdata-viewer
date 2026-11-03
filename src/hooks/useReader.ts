@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 
 import type { ReaderMenuItemId } from '../components/ReaderMenu'
-import { PAGE_SIZE } from '../lib/pagination'
 import { DEFAULT_VOTE_FILTERS, type ListFilters } from '../lib/list-filters'
 import { filterContent, getContentResult } from '../lib/reader-content'
 import {
@@ -24,12 +23,6 @@ const FILE_MENU_ITEMS: Record<RedditFileData['type'], ReaderMenuItemId> = {
   'post-votes': 'post-votes',
   'saved-posts': 'saved',
   'hidden-posts': 'hidden',
-}
-
-const FILE_TITLES: Record<RedditFileData['type'], string> = {
-  'post-votes': 'Оценки',
-  'saved-posts': 'Сохранённые посты',
-  'hidden-posts': 'Скрытые посты',
 }
 
 export function useReader() {
@@ -129,47 +122,27 @@ export function useReader() {
     setActiveMenuItem(id)
   }
 
-  const content =
-    opened && selection && list
-      ? {
-          fileName: opened.fileName,
-          title: FILE_TITLES[selection.file.type],
-          query,
-          onQueryChange: changeQuery,
-          onReset: resetConditions,
-          filtering: {
-            values: list.filters,
-            voteChoices: list.voteChoices,
-            communityChoices: list.communityChoices,
-            onChange: changeFilters,
-          },
-          totalRecords: list.totalRecords,
-          matchedRecords: list.matchedRecords,
-          pageRecords: list.pageRecords,
-          start: list.start,
-        }
-      : null
-
-  const pagination =
-    content && list && list.pageCount > 0
-      ? {
-          page: list.page,
-          pageCount: list.pageCount,
-          totalRecords: list.matchedRecords,
-          pageSize: PAGE_SIZE,
-          onPageChange: changePage,
-        }
-      : null
-
   return {
-    content,
-    pagination,
-    activeMenuItem,
-    availableMenuItems,
-    selectMenuItem,
-    openFile,
-    hasSource: opened !== null,
-    isReading,
-    error,
+    source: {
+      fileName: opened?.fileName ?? '',
+      hasSource: opened !== null,
+      isReading,
+      error,
+      openFile,
+    },
+    menu: {
+      activeMenuItem,
+      availableMenuItems,
+      selectMenuItem,
+    },
+    content: {
+      selection,
+      query,
+      list,
+      changeFilters,
+      changePage,
+      changeQuery,
+      resetConditions,
+    },
   }
 }

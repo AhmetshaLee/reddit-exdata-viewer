@@ -1,6 +1,8 @@
+import type { FilterChoice } from '../lib/filter-choices'
+import type { ListFilters } from '../lib/list-filters'
 import type { PostEntry } from '../lib/post-list'
 import PostCard from './PostCard'
-import ReaderToolbar, { type PostFiltering } from './ReaderToolbar'
+import ReaderToolbar, { type ReaderFilterGroup } from './ReaderToolbar'
 import styles from './posts.module.css'
 
 type PostListViewProps = {
@@ -9,7 +11,10 @@ type PostListViewProps = {
   query: string
   onQueryChange: (query: string) => void
   onReset: () => void
-  filtering: PostFiltering
+  filters: ListFilters
+  onFiltersChange: (filters: ListFilters) => void
+  voteChoices?: FilterChoice[]
+  communityChoices: FilterChoice[]
   totalRecords: number
   matchedRecords: number
   pageRecords: PostEntry[]
@@ -24,7 +29,10 @@ export default function PostListView({
   query,
   onQueryChange,
   onReset,
-  filtering,
+  filters,
+  onFiltersChange,
+  voteChoices,
+  communityChoices,
   totalRecords,
   matchedRecords,
   pageRecords,
@@ -32,16 +40,35 @@ export default function PostListView({
   disabled,
   onFileSelected,
 }: PostListViewProps) {
+  const groups: ReaderFilterGroup[] = [
+    {
+      name: 'community',
+      legend: 'Сабреддиты',
+      choices: communityChoices,
+      selected: filters.community,
+      onChange: (community) => onFiltersChange({ ...filters, community }),
+    },
+  ]
+  if (voteChoices) {
+    groups.unshift({
+      name: 'direction',
+      legend: 'Оценки',
+      choices: voteChoices,
+      selected: filters.direction ?? 'all',
+      onChange: (direction) => onFiltersChange({ ...filters, direction }),
+    })
+  }
+
   return (
     <>
       {totalRecords === 0 && (
         <p className={styles.message}>В файле нет постов</p>
       )}
       <ReaderToolbar
-        query={query}
-        onQueryChange={onQueryChange}
+        search={{ query, onChange: onQueryChange }}
+        searchPlaceholder="Поиск по названию, ссылке или ID поста"
         onReset={onReset}
-        filtering={filtering}
+        groups={groups}
         fileName={fileName}
         disabled={disabled}
         onFileSelected={onFileSelected}

@@ -1,22 +1,22 @@
 import type { FilterChoice } from '../lib/filter-choices'
-import type { ListFilters } from '../lib/list-filters'
 import FilePickerButton from './FilePickerButton'
 import styles from './reader-toolbar.module.css'
 
-export type PostFiltering = {
-  values: ListFilters
-  voteChoices?: FilterChoice[]
-  communityChoices: FilterChoice[]
-  onChange: (values: ListFilters) => void
+export type ReaderFilterGroup = {
+  name: string
+  legend: string
+  choices: FilterChoice[]
+  selected: string
+  onChange: (value: string) => void
 }
 
 type ReaderToolbarProps = {
   onFileSelected: (file: File) => void
   disabled: boolean
   fileName: string
-  query: string
-  onQueryChange: (query: string) => void
-  filtering: PostFiltering
+  search: { query: string; onChange: (query: string) => void }
+  searchPlaceholder: string
+  groups?: ReaderFilterGroup[]
   onReset: () => void
   totalRecords: number
   matchedRecords: number
@@ -26,33 +26,13 @@ export default function ReaderToolbar({
   onFileSelected,
   disabled,
   fileName,
-  query,
-  onQueryChange,
-  filtering,
+  search,
+  searchPlaceholder,
+  groups = [],
   onReset,
   totalRecords,
   matchedRecords,
 }: ReaderToolbarProps) {
-  const { values, voteChoices, communityChoices, onChange } = filtering
-  const groups = [
-    {
-      name: 'community',
-      legend: 'Сабреддиты',
-      choices: communityChoices,
-      selected: values.community,
-      onChange: (community: string) => onChange({ ...values, community }),
-    },
-  ]
-  if (voteChoices) {
-    groups.unshift({
-      name: 'direction',
-      legend: 'Оценки',
-      choices: voteChoices,
-      selected: values.direction ?? 'all',
-      onChange: (direction: string) => onChange({ ...values, direction }),
-    })
-  }
-
   return (
     <section className={styles.toolbar} aria-label="Панель поиска и фильтров">
       <div className={styles.documentBar}>
@@ -83,45 +63,47 @@ export default function ReaderToolbar({
             className={styles.search}
             type="search"
             name="search"
-            placeholder="Поиск по названию, ссылке или ID поста"
-            value={query}
+            placeholder={searchPlaceholder}
+            value={search.query}
             disabled={disabled}
-            onChange={(event) => onQueryChange(event.currentTarget.value)}
+            onChange={(event) => search.onChange(event.currentTarget.value)}
           />
         </label>
         <div className={styles.filterRow}>
-          <details>
-            <summary className={styles.summary}>Фильтры</summary>
-            <div className={styles.filters}>
-              {groups.map(({ name, legend, choices, selected, onChange }) => (
-                <fieldset
-                  className={styles.group}
-                  key={name}
-                  disabled={disabled}
-                >
-                  <legend>{legend}</legend>
-                  <div className={styles.choices}>
-                    {choices.map((choice) => (
-                      <label className={styles.choice} key={choice.value}>
-                        <input
-                          className={styles.choiceInput}
-                          type="radio"
-                          name={name}
-                          value={choice.value}
-                          checked={selected === choice.value}
-                          onChange={() => onChange(choice.value)}
-                        />
-                        <span className={styles.chip}>
-                          <span>{choice.label}</span>
-                          <span className={styles.count}>{choice.count}</span>
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-              ))}
-            </div>
-          </details>
+          {groups.length > 0 && (
+            <details>
+              <summary className={styles.summary}>Фильтры</summary>
+              <div className={styles.filters}>
+                {groups.map(({ name, legend, choices, selected, onChange }) => (
+                  <fieldset
+                    className={styles.group}
+                    key={name}
+                    disabled={disabled}
+                  >
+                    <legend>{legend}</legend>
+                    <div className={styles.choices}>
+                      {choices.map((choice) => (
+                        <label className={styles.choice} key={choice.value}>
+                          <input
+                            className={styles.choiceInput}
+                            type="radio"
+                            name={name}
+                            value={choice.value}
+                            checked={selected === choice.value}
+                            onChange={() => onChange(choice.value)}
+                          />
+                          <span className={styles.chip}>
+                            <span>{choice.label}</span>
+                            <span className={styles.count}>{choice.count}</span>
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                ))}
+              </div>
+            </details>
+          )}
           <div className={styles.resetAction}>
             <button
               className={styles.textButton}
