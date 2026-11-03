@@ -2,6 +2,7 @@ import type { FilterChoice } from '../lib/filter-choices'
 import type { ListFilters } from '../lib/list-filters'
 import type { PostEntry } from '../lib/post-list'
 import PostCard from './PostCard'
+import ReaderListFrame from './ReaderListFrame'
 import ReaderToolbar, { type ReaderFilterGroup } from './ReaderToolbar'
 import styles from './posts.module.css'
 
@@ -60,35 +61,29 @@ export default function PostListView({
   }
 
   return (
-    <>
-      {totalRecords === 0 && (
-        <p className={styles.message}>В файле нет постов</p>
-      )}
-      <ReaderToolbar
-        search={{ query, onChange: onQueryChange }}
-        searchPlaceholder="Поиск по названию, ссылке или ID поста"
-        onReset={onReset}
-        groups={groups}
-        fileName={fileName}
-        disabled={disabled}
-        onFileSelected={onFileSelected}
-        totalRecords={totalRecords}
-        matchedRecords={matchedRecords}
-      />
-      <hr className={styles.listDivider} />
-      {totalRecords > 0 && matchedRecords === 0 && (
-        <div className={styles.emptyState}>
-          <p className={styles.emptyMessage}>
-            По выбранным условиям ничего не найдено
-          </p>
-          <div className={styles.emptyIllustration} aria-hidden="true" />
-        </div>
-      )}
+    <ReaderListFrame
+      totalRecords={totalRecords}
+      matchedRecords={matchedRecords}
+      emptyMessage="В файле нет постов"
+      toolbar={
+        <ReaderToolbar
+          search={{ query, onChange: onQueryChange }}
+          searchPlaceholder="Поиск по названию, ссылке или ID поста"
+          onReset={onReset}
+          groups={groups}
+          fileName={fileName}
+          disabled={disabled}
+          onFileSelected={onFileSelected}
+          totalRecords={totalRecords}
+          matchedRecords={matchedRecords}
+        />
+      }
+    >
       <ol className={styles.cards} aria-label={title} start={start + 1}>
         {pageRecords.map((entry) => (
           <PostCard key={entry.sourceIndex} post={entry} />
         ))}
       </ol>
-    </>
+    </ReaderListFrame>
   )
 }

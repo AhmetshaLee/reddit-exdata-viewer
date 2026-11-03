@@ -9,7 +9,7 @@ import PostListView from './PostListView'
 import ReaderLayout from './ReaderLayout'
 import ReaderMenu from './ReaderMenu'
 import ReaderPagination from './ReaderPagination'
-import styles from './posts.module.css'
+import styles from './reader-results.module.css'
 
 const FILE_TITLES: Record<RedditFileData['type'], string> = {
   'post-votes': 'Оценки',
