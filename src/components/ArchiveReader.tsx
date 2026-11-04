@@ -12,7 +12,7 @@ import ReaderPagination from './ReaderPagination'
 import styles from './reader-results.module.css'
 
 const FILE_TITLES: Record<RedditFileData['type'], string> = {
-  'post-votes': 'Оценки',
+  'post-votes': 'Оценённые посты',
   'saved-posts': 'Сохранённые посты',
   'hidden-posts': 'Скрытые посты',
 }

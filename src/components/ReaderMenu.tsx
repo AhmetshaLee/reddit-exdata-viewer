@@ -5,8 +5,8 @@ export type ReaderMenuItemId =
   | 'comments'
   | 'messages'
   | 'post-votes'
-  | 'saved'
-  | 'hidden'
+  | 'saved-posts'
+  | 'hidden-posts'
   | 'account'
   | 'settings'
 
@@ -22,11 +22,15 @@ const menuItems: MenuItem[] = [
   { id: 'messages', label: 'Сообщения' },
   {
     id: 'post-votes',
-    label: 'Оценки',
-    description: 'Оценки: нравится и не нравится',
+    label: 'Оценён. посты',
+    description: 'Оценённые посты: нравится/не нравится',
   },
-  { id: 'saved', label: 'Сохранённое' },
-  { id: 'hidden', label: 'Скрытые посты' },
+  {
+    id: 'saved-posts',
+    label: 'Сохр. посты',
+    description: 'Посты, которые вы сохранили',
+  },
+  { id: 'hidden-posts', label: 'Скрытые посты' },
   { id: 'account', label: 'Аккаунт' },
   { id: 'settings', label: 'Настройки' },
 ]
@@ -52,6 +56,7 @@ export default function ReaderMenu({
             <button
               className={styles.menuButton}
               type="button"
+              title={description ?? label}
               aria-label={description}
               aria-current={activeMenuItem === id ? true : undefined}
               disabled={disabled || !availableMenuItems.includes(id)}
