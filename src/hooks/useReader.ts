@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 
 import type { ReaderMenuItemId } from '../components/ReaderMenu'
-import { DEFAULT_VOTE_FILTERS, type ListFilters } from '../lib/list-filters'
+import type { ListFilters } from '../lib/list-filters'
 import { filterContent, getContentResult } from '../lib/reader-content'
 import {
   readRedditSource,
@@ -23,6 +23,7 @@ const FILE_MENU_ITEMS: Record<RedditFileData['type'], ReaderMenuItemId> = {
   'post-votes': 'post-votes',
   'saved-posts': 'saved-posts',
   'hidden-posts': 'hidden-posts',
+  'user-preferences': 'settings',
 }
 
 export function useReader() {
@@ -40,8 +41,8 @@ export function useReader() {
 
   const file = selection?.file
   const query = selection?.conditions.query ?? ''
-  const filters = selection?.conditions.filters ?? DEFAULT_VOTE_FILTERS
-  const page = selection?.conditions.page ?? 1
+  const filters = selection?.conditions.filters
+  const page = selection?.conditions.page
 
   const matched = useMemo(
     () => (file ? filterContent(file, query, filters) : null),
@@ -94,11 +95,17 @@ export function useReader() {
   }
 
   function changeQuery(query: string) {
-    updateSelectedConditions((current) => ({ ...current, query, page: 1 }))
+    updateSelectedConditions((current) =>
+      current.page === undefined
+        ? { ...current, query }
+        : { ...current, query, page: 1 },
+    )
   }
 
   function changeFilters(filters: ListFilters) {
-    updateSelectedConditions((current) => ({ ...current, filters, page: 1 }))
+    updateSelectedConditions((current) =>
+      current.filters ? { ...current, filters, page: 1 } : current,
+    )
   }
 
   function resetConditions() {
@@ -109,6 +116,7 @@ export function useReader() {
   function changePage(nextPage: number) {
     if (
       !list ||
+      !('pageCount' in list) ||
       nextPage < 1 ||
       nextPage > list.pageCount ||
       nextPage === list.page

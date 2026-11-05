@@ -8,8 +8,8 @@ import { prepareContent, type PreparedContent } from './reader-content'
 
 export type ReaderConditions = {
   query: string
-  filters: ListFilters
-  page: number
+  filters?: ListFilters
+  page?: number
 }
 
 export type ReaderFile = {
@@ -20,6 +20,7 @@ export type ReaderFile = {
 export function createConditions(
   type: RedditFileData['type'],
 ): ReaderConditions {
+  if (type === 'user-preferences') return { query: '' }
   return {
     query: '',
     filters:

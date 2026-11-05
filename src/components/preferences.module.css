@@ -1,0 +1,12 @@
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
