@@ -20,7 +20,7 @@ export type ReaderFile = {
 export function createConditions(
   type: RedditFileData['type'],
 ): ReaderConditions {
-  if (type === 'user-preferences') return { query: '' }
+  if (type === 'user-preferences' || type === 'statistics') return { query: '' }
   return {
     query: '',
     filters:

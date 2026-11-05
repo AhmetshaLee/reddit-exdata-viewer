@@ -16,10 +16,3 @@ export function parseUserPreferences(text: string): UserPreference[] {
     value: row.value,
   }))
 }
-
-export function filterPreferences(records: UserPreference[], query: string) {
-  const search = query.trim().toLowerCase()
-  return records.filter((row) =>
-    `${row.preference} ${row.value}`.toLowerCase().includes(search),
-  )
-}

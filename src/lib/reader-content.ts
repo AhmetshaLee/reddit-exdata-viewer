@@ -11,7 +11,7 @@ import {
 import { paginateRecords } from './pagination'
 import { preparePosts, type PostEntry } from './post-list'
 import type { RedditFileData } from './read-reddit-source'
-import { filterPreferences, type UserPreference } from './user-preferences'
+import { filterProperties, type PropertyEntry } from './property-list'
 
 type PreparedPosts = {
   type: 'post-votes' | 'saved-posts' | 'hidden-posts'
@@ -21,10 +21,29 @@ type PreparedPosts = {
 }
 
 export type PreparedContent =
-  PreparedPosts | { type: 'user-preferences'; records: UserPreference[] }
+  | PreparedPosts
+  | { type: 'user-preferences'; records: PropertyEntry[] }
+  | { type: 'statistics'; records: PropertyEntry[] }
 
 export function prepareContent(file: RedditFileData): PreparedContent {
-  if (file.type === 'user-preferences') return file
+  if (file.type === 'user-preferences') {
+    return {
+      type: file.type,
+      records: file.records.map((record) => ({
+        label: record.preference,
+        value: record.value,
+      })),
+    }
+  }
+  if (file.type === 'statistics') {
+    return {
+      type: file.type,
+      records: file.records.map((record) => ({
+        label: record.statistic,
+        value: record.value,
+      })),
+    }
+  }
   const records = preparePosts(file.records)
   return {
     type: file.type,
@@ -42,10 +61,10 @@ export function filterContent(
   query: string,
   filters: ListFilters | undefined,
 ) {
-  if (content.type === 'user-preferences') {
+  if (content.type === 'user-preferences' || content.type === 'statistics') {
     return {
       ...content,
-      records: filterPreferences(content.records, query),
+      records: filterProperties(content.records, query),
     }
   }
   const postFilters = filters ?? DEFAULT_LIST_FILTERS
@@ -65,7 +84,7 @@ export function getContentResult(
     totalRecords,
     matchedRecords: matched.records.length,
   }
-  if (matched.type === 'user-preferences') {
+  if (matched.type === 'user-preferences' || matched.type === 'statistics') {
     return { type: matched.type, records: matched.records, ...counts }
   }
   return {

@@ -6,7 +6,7 @@ import type { RedditFileData } from '../lib/read-reddit-source'
 import layout from '../pages/index.module.css'
 import FileUploadView from './FileUploadView'
 import PostListView from './PostListView'
-import PreferencesView from './PreferencesView'
+import PropertyListView from './PropertyListView'
 import ReaderLayout from './ReaderLayout'
 import ReaderMenu from './ReaderMenu'
 import ReaderPagination from './ReaderPagination'
@@ -17,6 +17,7 @@ const FILE_TITLES: Record<RedditFileData['type'], string> = {
   'saved-posts': 'Сохранённые посты',
   'hidden-posts': 'Скрытые посты',
   'user-preferences': 'Настройки Reddit',
+  statistics: 'Статистика',
 }
 
 export default function ArchiveReader() {
@@ -48,9 +49,23 @@ export default function ArchiveReader() {
     switch (list.type) {
       case 'user-preferences':
         return (
-          <PreferencesView
+          <PropertyListView
             {...list}
             {...fileProps}
+            searchPlaceholder="Поиск по параметру или значению"
+            emptyMessage="В файле нет настроек"
+            query={content.query}
+            onQueryChange={content.changeQuery}
+            onReset={content.resetConditions}
+          />
+        )
+      case 'statistics':
+        return (
+          <PropertyListView
+            {...list}
+            {...fileProps}
+            searchPlaceholder="Поиск по показателю или значению"
+            emptyMessage="В файле нет статистики"
             query={content.query}
             onQueryChange={content.changeQuery}
             onReset={content.resetConditions}

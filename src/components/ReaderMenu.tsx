@@ -9,6 +9,7 @@ export type ReaderMenuItemId =
   | 'hidden-posts'
   | 'account'
   | 'settings'
+  | 'statistics'
 
 type MenuItem = {
   id: ReaderMenuItemId
@@ -33,6 +34,7 @@ const menuItems: MenuItem[] = [
   { id: 'hidden-posts', label: 'Скрытые посты' },
   { id: 'account', label: 'Аккаунт' },
   { id: 'settings', label: 'Настройки' },
+  { id: 'statistics', label: 'Статистика' },
 ]
 
 type ReaderMenuProps = {

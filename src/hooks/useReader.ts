@@ -24,6 +24,7 @@ const FILE_MENU_ITEMS: Record<RedditFileData['type'], ReaderMenuItemId> = {
   'saved-posts': 'saved-posts',
   'hidden-posts': 'hidden-posts',
   'user-preferences': 'settings',
+  statistics: 'statistics',
 }
 
 export function useReader() {

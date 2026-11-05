@@ -1,10 +1,12 @@
-import type { UserPreference } from '../lib/user-preferences'
+import type { PropertyEntry } from '../lib/property-list'
 import ReaderListFrame from './ReaderListFrame'
 import ReaderToolbar from './ReaderToolbar'
-import styles from './preferences.module.css'
+import styles from './property-list.module.css'
 
-type PreferencesViewProps = {
-  records: UserPreference[]
+type PropertyListViewProps = {
+  records: PropertyEntry[]
+  searchPlaceholder: string
+  emptyMessage: string
   totalRecords: number
   matchedRecords: number
   query: string
@@ -15,8 +17,10 @@ type PreferencesViewProps = {
   onFileSelected: (file: File) => void
 }
 
-export default function PreferencesView({
+export default function PropertyListView({
   records,
+  searchPlaceholder,
+  emptyMessage,
   totalRecords,
   matchedRecords,
   query,
@@ -25,16 +29,16 @@ export default function PreferencesView({
   fileName,
   disabled,
   onFileSelected,
-}: PreferencesViewProps) {
+}: PropertyListViewProps) {
   return (
     <ReaderListFrame
       totalRecords={totalRecords}
       matchedRecords={matchedRecords}
-      emptyMessage="В файле нет настроек"
+      emptyMessage={emptyMessage}
       toolbar={
         <ReaderToolbar
           search={{ query, onChange: onQueryChange }}
-          searchPlaceholder="Поиск по параметру или значению"
+          searchPlaceholder={searchPlaceholder}
           onReset={onReset}
           fileName={fileName}
           disabled={disabled}
@@ -45,9 +49,9 @@ export default function PreferencesView({
       }
     >
       <dl className={styles.list}>
-        {records.map(({ preference, value }, index) => (
+        {records.map(({ label, value }, index) => (
           <div className={styles.item} key={index}>
-            <dt className={styles.name}>{preference}</dt>
+            <dt className={styles.name}>{label}</dt>
             <dd className={styles.value}>{value === '' ? '—' : value}</dd>
           </div>
         ))}
