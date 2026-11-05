@@ -89,7 +89,7 @@ export default function ArchiveReader() {
   }
 
   useEffect(() => {
-    if (!source.hasSource) return
+    if (import.meta.env.DEV || !source.hasSource) return
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault()
