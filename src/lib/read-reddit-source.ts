@@ -85,7 +85,13 @@ async function readArchive(file: File): Promise<RedditFileData[]> {
       } catch {
         throw new Error(`Не удалось извлечь ${entry.name} из ZIP-архива.`)
       }
-      return parseRedditFile(entry.name.toLowerCase(), text)
+      try {
+        return parseRedditFile(entry.name.toLowerCase(), text)
+      } catch (cause) {
+        const message =
+          cause instanceof Error ? cause.message : 'Не удалось разобрать CSV.'
+        throw new Error(`Файл ${entry.name}: ${message}`, { cause })
+      }
     }),
   )
 }
