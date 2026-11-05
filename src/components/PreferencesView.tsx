@@ -47,8 +47,8 @@ export default function PreferencesView({
       <dl className={styles.list}>
         {records.map(({ preference, value }, index) => (
           <div className={styles.item} key={index}>
-            <dt>{preference}</dt>
-            <dd>{value || '—'}</dd>
+            <dt className={styles.name}>{preference}</dt>
+            <dd className={styles.value}>{value === '' ? '—' : value}</dd>
           </div>
         ))}
       </dl>
