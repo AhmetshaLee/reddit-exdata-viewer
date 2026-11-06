@@ -48,24 +48,11 @@ export default function ArchiveReader() {
 
     switch (list.type) {
       case 'user-preferences':
-        return (
-          <PropertyListView
-            {...list}
-            {...fileProps}
-            searchPlaceholder="Поиск по параметру или значению"
-            emptyMessage="В файле нет настроек"
-            query={content.query}
-            onQueryChange={content.changeQuery}
-            onReset={content.resetConditions}
-          />
-        )
       case 'statistics':
         return (
           <PropertyListView
             {...list}
             {...fileProps}
-            searchPlaceholder="Поиск по показателю или значению"
-            emptyMessage="В файле нет статистики"
             query={content.query}
             onQueryChange={content.changeQuery}
             onReset={content.resetConditions}

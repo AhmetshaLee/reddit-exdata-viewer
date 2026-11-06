@@ -5,8 +5,6 @@ import styles from './property-list.module.css'
 
 type PropertyListViewProps = {
   records: PropertyEntry[]
-  searchPlaceholder: string
-  emptyMessage: string
   totalRecords: number
   matchedRecords: number
   query: string
@@ -19,8 +17,6 @@ type PropertyListViewProps = {
 
 export default function PropertyListView({
   records,
-  searchPlaceholder,
-  emptyMessage,
   totalRecords,
   matchedRecords,
   query,
@@ -34,11 +30,11 @@ export default function PropertyListView({
     <ReaderListFrame
       totalRecords={totalRecords}
       matchedRecords={matchedRecords}
-      emptyMessage={emptyMessage}
+      emptyMessage="В файле нет записей"
       toolbar={
         <ReaderToolbar
           search={{ query, onChange: onQueryChange }}
-          searchPlaceholder={searchPlaceholder}
+          searchPlaceholder="Поиск по названию или значению"
           onReset={onReset}
           fileName={fileName}
           disabled={disabled}
