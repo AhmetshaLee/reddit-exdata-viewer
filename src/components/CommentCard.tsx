@@ -14,9 +14,11 @@ export default function CommentCard({ entry }: { entry: CommentEntry }) {
           К публикации: {parentTitle}
         </p>
       )}
-      <p className={styles.direction}>
-        Ваша оценка: {getVoteLabel(record.direction)}
-      </p>
+      {'direction' in record && (
+        <p className={styles.direction}>
+          Ваша оценка: {getVoteLabel(record.direction)}
+        </p>
+      )}
     </>
   )
 

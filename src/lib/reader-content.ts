@@ -21,14 +21,16 @@ type PreparedPosts = {
   voteChoices?: FilterChoice[]
 }
 
+type PreparedComments = {
+  type: 'comment-votes' | 'saved-comments'
+  records: CommentEntry[]
+  communityChoices: FilterChoice[]
+  voteChoices?: FilterChoice[]
+}
+
 export type PreparedContent =
   | PreparedPosts
-  | {
-      type: 'comment-votes'
-      records: CommentEntry[]
-      communityChoices: FilterChoice[]
-      voteChoices: FilterChoice[]
-    }
+  | PreparedComments
   | { type: 'user-preferences'; records: PropertyEntry[] }
   | { type: 'statistics'; records: PropertyEntry[] }
 
@@ -50,15 +52,17 @@ export function prepareContent(file: RedditFileData): PreparedContent {
           value: record.value,
         })),
       }
-    case 'comment-votes': {
+    case 'comment-votes':
+    case 'saved-comments': {
       const records = prepareComments(file.records)
       return {
         type: file.type,
         records,
         communityChoices: getCommunityChoices(records),
-        voteChoices: getVoteChoices(
-          file.records.map((record) => record.direction),
-        ),
+        voteChoices:
+          file.type === 'comment-votes'
+            ? getVoteChoices(file.records.map((record) => record.direction))
+            : undefined,
       }
     }
     case 'post-votes':
@@ -91,6 +95,7 @@ export function filterContent(
         records: filterProperties(content.records, query),
       }
     case 'comment-votes':
+    case 'saved-comments':
       return {
         ...content,
         records: filterList(content.records, query, filters),
@@ -121,6 +126,7 @@ export function getContentResult(
     case 'statistics':
       return { type: matched.type, records: matched.records, ...counts }
     case 'comment-votes':
+    case 'saved-comments':
       return {
         type: matched.type,
         filters: matched.filters,

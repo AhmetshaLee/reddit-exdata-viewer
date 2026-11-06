@@ -16,6 +16,7 @@ import styles from './reader-results.module.css'
 const FILE_TITLES: Record<RedditFileData['type'], string> = {
   'post-votes': 'Оценённые посты',
   'comment-votes': 'Оценённые комментарии',
+  'saved-comments': 'Сохранённые комментарии',
   'saved-posts': 'Сохранённые посты',
   'hidden-posts': 'Скрытые посты',
   'user-preferences': 'Настройки Reddit',
@@ -50,6 +51,7 @@ export default function ArchiveReader() {
 
     switch (list.type) {
       case 'comment-votes':
+      case 'saved-comments':
         return (
           <CommentListView
             {...list}

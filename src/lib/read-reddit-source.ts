@@ -1,13 +1,14 @@
 import { unzipRaw, type ZipEntry, type ZipInfoRaw } from 'unzipit'
 
 import { parseVotes, type VoteRecord } from './votes'
-import { parsePostReferences, type PostReference } from './post-references'
+import { parseLinkRecords, type LinkRecord } from './link-records'
 import { parseUserPreferences, type UserPreference } from './user-preferences'
 import { parseStatistics, type Statistic } from './statistics'
 
 const SUPPORTED_CSV_FILES = [
   'post_votes.csv',
   'comment_votes.csv',
+  'saved_comments.csv',
   'saved_posts.csv',
   'hidden_posts.csv',
   'user_preferences.csv',
@@ -17,8 +18,9 @@ const SUPPORTED_CSV_FILES = [
 export type RedditFileData =
   | { type: 'post-votes'; records: VoteRecord[] }
   | { type: 'comment-votes'; records: VoteRecord[] }
-  | { type: 'saved-posts'; records: PostReference[] }
-  | { type: 'hidden-posts'; records: PostReference[] }
+  | { type: 'saved-comments'; records: LinkRecord[] }
+  | { type: 'saved-posts'; records: LinkRecord[] }
+  | { type: 'hidden-posts'; records: LinkRecord[] }
   | { type: 'user-preferences'; records: UserPreference[] }
   | { type: 'statistics'; records: Statistic[] }
 
@@ -48,10 +50,12 @@ function parseRedditFile(name: string, text: string): RedditFileData {
       return { type: 'post-votes', records: parseVotes(text) }
     case 'comment_votes.csv':
       return { type: 'comment-votes', records: parseVotes(text) }
+    case 'saved_comments.csv':
+      return { type: 'saved-comments', records: parseLinkRecords(text) }
     case 'saved_posts.csv':
-      return { type: 'saved-posts', records: parsePostReferences(text) }
+      return { type: 'saved-posts', records: parseLinkRecords(text) }
     case 'hidden_posts.csv':
-      return { type: 'hidden-posts', records: parsePostReferences(text) }
+      return { type: 'hidden-posts', records: parseLinkRecords(text) }
     case 'user_preferences.csv':
       return { type: 'user-preferences', records: parseUserPreferences(text) }
     case 'statistics.csv':

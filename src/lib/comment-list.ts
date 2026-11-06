@@ -1,8 +1,9 @@
 import { getRedditPostLink } from './reddit-post-link'
 import type { VoteRecord } from './votes'
+import type { LinkRecord } from './link-records'
 
 export type CommentEntry = {
-  record: VoteRecord
+  record: VoteRecord | LinkRecord
   sourceIndex: number
   href: string | null
   community: string
@@ -11,7 +12,9 @@ export type CommentEntry = {
   searchText: string
 }
 
-export function prepareComments(records: VoteRecord[]): CommentEntry[] {
+export function prepareComments(
+  records: (VoteRecord | LinkRecord)[],
+): CommentEntry[] {
   return records.map((record, sourceIndex) => {
     const link = getRedditPostLink(record.permalink)
     const subreddit = link?.subreddit
