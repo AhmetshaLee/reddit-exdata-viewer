@@ -9,7 +9,6 @@ export type ReaderMenuItemId =
   | 'saved-comments'
   | 'saved-posts'
   | 'hidden-posts'
-  | 'account'
   | 'settings'
   | 'statistics'
 
@@ -19,34 +18,56 @@ type MenuItem = {
   description?: string
 }
 
-const menuItems: MenuItem[] = [
-  { id: 'posts', label: 'Посты' },
-  { id: 'comments', label: 'Комментарии' },
-  { id: 'messages', label: 'Сообщения' },
+type MenuGroup = {
+  label: string
+  items: MenuItem[]
+}
+
+const menuGroups: MenuGroup[] = [
   {
-    id: 'post-votes',
-    label: 'Оценён. посты',
-    description: 'Оценённые посты: нравится/не нравится',
+    label: 'Посты',
+    items: [
+      { id: 'posts', label: 'Мои', description: 'Собственные посты' },
+      {
+        id: 'post-votes',
+        label: 'Оценённые',
+        description: 'Оценённые посты: нравится/не нравится',
+      },
+      {
+        id: 'saved-posts',
+        label: 'Сохранённые',
+        description: 'Посты, которые вы сохранили',
+      },
+      { id: 'hidden-posts', label: 'Скрытые', description: 'Скрытые посты' },
+    ],
   },
   {
-    id: 'saved-posts',
-    label: 'Сохр. посты',
-    description: 'Посты, которые вы сохранили',
+    label: 'Комментарии',
+    items: [
+      { id: 'comments', label: 'Мои', description: 'Собственные комментарии' },
+      {
+        id: 'comment-votes',
+        label: 'Оценённые',
+        description: 'Оценённые комментарии: нравится/не нравится',
+      },
+      {
+        id: 'saved-comments',
+        label: 'Сохранённые',
+        description: 'Комментарии, которые вы сохранили',
+      },
+    ],
   },
   {
-    id: 'comment-votes',
-    label: 'Оценён. комм.',
-    description: 'Оценённые комментарии: нравится/не нравится',
+    label: 'Аккаунт',
+    items: [
+      { id: 'settings', label: 'Настройки' },
+      { id: 'statistics', label: 'Статистика' },
+    ],
   },
   {
-    id: 'saved-comments',
-    label: 'Сохр. комм.',
-    description: 'Комментарии, которые вы сохранили',
+    label: 'Другое',
+    items: [{ id: 'messages', label: 'Сообщения' }],
   },
-  { id: 'hidden-posts', label: 'Скрытые посты' },
-  { id: 'account', label: 'Аккаунт' },
-  { id: 'settings', label: 'Настройки' },
-  { id: 'statistics', label: 'Статистика' },
 ]
 
 type ReaderMenuProps = {
@@ -62,24 +83,44 @@ export default function ReaderMenu({
   disabled,
   onSelect,
 }: ReaderMenuProps) {
+  function renderMenuItem({ id, label, description }: MenuItem) {
+    return (
+      <li key={id}>
+        <button
+          className={styles.menuButton}
+          type="button"
+          title={description ?? label}
+          aria-label={description}
+          aria-current={activeMenuItem === id ? true : undefined}
+          disabled={disabled || !availableMenuItems.includes(id)}
+          onClick={() => onSelect(id)}
+        >
+          {label}
+        </button>
+      </li>
+    )
+  }
+
   return (
     <nav aria-label="Разделы архива">
       <ul className={styles.menu}>
-        {menuItems.map(({ id, label, description }) => (
-          <li key={id}>
-            <button
-              className={styles.menuButton}
-              type="button"
-              title={description ?? label}
-              aria-label={description}
-              aria-current={activeMenuItem === id ? true : undefined}
-              disabled={disabled || !availableMenuItems.includes(id)}
-              onClick={() => onSelect(id)}
-            >
-              {label}
-            </button>
-          </li>
-        ))}
+        {menuGroups.map(({ label, items }, index) => {
+          const orderedItems = [
+            ...items.filter(({ id }) => availableMenuItems.includes(id)),
+            ...items.filter(({ id }) => !availableMenuItems.includes(id)),
+          ]
+
+          return (
+            <li key={label}>
+              <details open={index === 0}>
+                <summary className={styles.menuGroupTitle}>{label}</summary>
+                <ul className={styles.menuItems}>
+                  {orderedItems.map(renderMenuItem)}
+                </ul>
+              </details>
+            </li>
+          )
+        })}
       </ul>
     </nav>
   )
