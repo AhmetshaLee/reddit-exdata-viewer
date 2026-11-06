@@ -5,6 +5,7 @@ export type ReaderMenuItemId =
   | 'comments'
   | 'messages'
   | 'post-votes'
+  | 'comment-votes'
   | 'saved-posts'
   | 'hidden-posts'
   | 'account'
@@ -30,6 +31,11 @@ const menuItems: MenuItem[] = [
     id: 'saved-posts',
     label: 'Сохр. посты',
     description: 'Посты, которые вы сохранили',
+  },
+  {
+    id: 'comment-votes',
+    label: 'Оценён. комм.',
+    description: 'Оценённые комментарии: нравится/не нравится',
   },
   { id: 'hidden-posts', label: 'Скрытые посты' },
   { id: 'account', label: 'Аккаунт' },

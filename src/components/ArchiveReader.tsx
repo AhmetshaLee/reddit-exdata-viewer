@@ -5,6 +5,7 @@ import { PAGE_SIZE } from '../lib/pagination'
 import type { RedditFileData } from '../lib/read-reddit-source'
 import layout from '../pages/index.module.css'
 import FileUploadView from './FileUploadView'
+import CommentListView from './CommentListView'
 import PostListView from './PostListView'
 import PropertyListView from './PropertyListView'
 import ReaderLayout from './ReaderLayout'
@@ -14,6 +15,7 @@ import styles from './reader-results.module.css'
 
 const FILE_TITLES: Record<RedditFileData['type'], string> = {
   'post-votes': 'Оценённые посты',
+  'comment-votes': 'Оценённые комментарии',
   'saved-posts': 'Сохранённые посты',
   'hidden-posts': 'Скрытые посты',
   'user-preferences': 'Настройки Reddit',
@@ -47,6 +49,18 @@ export default function ArchiveReader() {
     if (!list) return null
 
     switch (list.type) {
+      case 'comment-votes':
+        return (
+          <CommentListView
+            {...list}
+            {...fileProps}
+            title={title}
+            query={content.query}
+            onQueryChange={content.changeQuery}
+            onFiltersChange={content.changeFilters}
+            onReset={content.resetConditions}
+          />
+        )
       case 'user-preferences':
       case 'statistics':
         return (

@@ -1,12 +1,13 @@
 import { unzipRaw, type ZipEntry, type ZipInfoRaw } from 'unzipit'
 
-import { parsePostVotes, type PostVote } from './post-votes'
+import { parseVotes, type VoteRecord } from './votes'
 import { parsePostReferences, type PostReference } from './post-references'
 import { parseUserPreferences, type UserPreference } from './user-preferences'
 import { parseStatistics, type Statistic } from './statistics'
 
 const SUPPORTED_CSV_FILES = [
   'post_votes.csv',
+  'comment_votes.csv',
   'saved_posts.csv',
   'hidden_posts.csv',
   'user_preferences.csv',
@@ -14,7 +15,8 @@ const SUPPORTED_CSV_FILES = [
 ]
 
 export type RedditFileData =
-  | { type: 'post-votes'; records: PostVote[] }
+  | { type: 'post-votes'; records: VoteRecord[] }
+  | { type: 'comment-votes'; records: VoteRecord[] }
   | { type: 'saved-posts'; records: PostReference[] }
   | { type: 'hidden-posts'; records: PostReference[] }
   | { type: 'user-preferences'; records: UserPreference[] }
@@ -43,7 +45,9 @@ export async function readRedditSource(file: File): Promise<RedditFileData[]> {
 function parseRedditFile(name: string, text: string): RedditFileData {
   switch (name) {
     case 'post_votes.csv':
-      return { type: 'post-votes', records: parsePostVotes(text) }
+      return { type: 'post-votes', records: parseVotes(text) }
+    case 'comment_votes.csv':
+      return { type: 'comment-votes', records: parseVotes(text) }
     case 'saved_posts.csv':
       return { type: 'saved-posts', records: parsePostReferences(text) }
     case 'hidden_posts.csv':

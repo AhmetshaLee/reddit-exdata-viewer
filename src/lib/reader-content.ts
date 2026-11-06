@@ -10,6 +10,7 @@ import {
 } from './list-filters'
 import { paginateRecords } from './pagination'
 import { preparePosts, type PostEntry } from './post-list'
+import { prepareComments, type CommentEntry } from './comment-list'
 import type { RedditFileData } from './read-reddit-source'
 import { filterProperties, type PropertyEntry } from './property-list'
 
@@ -22,56 +23,87 @@ type PreparedPosts = {
 
 export type PreparedContent =
   | PreparedPosts
+  | {
+      type: 'comment-votes'
+      records: CommentEntry[]
+      communityChoices: FilterChoice[]
+      voteChoices: FilterChoice[]
+    }
   | { type: 'user-preferences'; records: PropertyEntry[] }
   | { type: 'statistics'; records: PropertyEntry[] }
 
 export function prepareContent(file: RedditFileData): PreparedContent {
-  if (file.type === 'user-preferences') {
-    return {
-      type: file.type,
-      records: file.records.map((record) => ({
-        label: record.preference,
-        value: record.value,
-      })),
+  switch (file.type) {
+    case 'user-preferences':
+      return {
+        type: file.type,
+        records: file.records.map((record) => ({
+          label: record.preference,
+          value: record.value,
+        })),
+      }
+    case 'statistics':
+      return {
+        type: file.type,
+        records: file.records.map((record) => ({
+          label: record.statistic,
+          value: record.value,
+        })),
+      }
+    case 'comment-votes': {
+      const records = prepareComments(file.records)
+      return {
+        type: file.type,
+        records,
+        communityChoices: getCommunityChoices(records),
+        voteChoices: getVoteChoices(
+          file.records.map((record) => record.direction),
+        ),
+      }
     }
-  }
-  if (file.type === 'statistics') {
-    return {
-      type: file.type,
-      records: file.records.map((record) => ({
-        label: record.statistic,
-        value: record.value,
-      })),
+    case 'post-votes':
+    case 'saved-posts':
+    case 'hidden-posts': {
+      const records = preparePosts(file.records)
+      return {
+        type: file.type,
+        records,
+        communityChoices: getCommunityChoices(records),
+        voteChoices:
+          file.type === 'post-votes'
+            ? getVoteChoices(file.records.map((record) => record.direction))
+            : undefined,
+      }
     }
-  }
-  const records = preparePosts(file.records)
-  return {
-    type: file.type,
-    records,
-    communityChoices: getCommunityChoices(records),
-    voteChoices:
-      file.type === 'post-votes'
-        ? getVoteChoices(file.records.map((record) => record.direction))
-        : undefined,
   }
 }
 
 export function filterContent(
   content: PreparedContent,
   query: string,
-  filters: ListFilters | undefined,
+  filters: ListFilters = DEFAULT_LIST_FILTERS,
 ) {
-  if (content.type === 'user-preferences' || content.type === 'statistics') {
-    return {
-      ...content,
-      records: filterProperties(content.records, query),
-    }
-  }
-  const postFilters = filters ?? DEFAULT_LIST_FILTERS
-  return {
-    ...content,
-    records: filterList(content.records, query, postFilters),
-    filters: postFilters,
+  switch (content.type) {
+    case 'user-preferences':
+    case 'statistics':
+      return {
+        ...content,
+        records: filterProperties(content.records, query),
+      }
+    case 'comment-votes':
+      return {
+        ...content,
+        records: filterList(content.records, query, filters),
+        filters,
+      }
+    case 'post-votes':
+    case 'saved-posts':
+    case 'hidden-posts':
+      return {
+        ...content,
+        records: filterList(content.records, query, filters),
+        filters,
+      }
   }
 }
 
@@ -84,15 +116,29 @@ export function getContentResult(
     totalRecords,
     matchedRecords: matched.records.length,
   }
-  if (matched.type === 'user-preferences' || matched.type === 'statistics') {
-    return { type: matched.type, records: matched.records, ...counts }
-  }
-  return {
-    type: matched.type,
-    filters: matched.filters,
-    communityChoices: matched.communityChoices,
-    voteChoices: matched.voteChoices,
-    ...counts,
-    ...paginateRecords(matched.records, page ?? 1),
+  switch (matched.type) {
+    case 'user-preferences':
+    case 'statistics':
+      return { type: matched.type, records: matched.records, ...counts }
+    case 'comment-votes':
+      return {
+        type: matched.type,
+        filters: matched.filters,
+        communityChoices: matched.communityChoices,
+        voteChoices: matched.voteChoices,
+        ...counts,
+        ...paginateRecords(matched.records, page ?? 1),
+      }
+    case 'post-votes':
+    case 'saved-posts':
+    case 'hidden-posts':
+      return {
+        type: matched.type,
+        filters: matched.filters,
+        communityChoices: matched.communityChoices,
+        voteChoices: matched.voteChoices,
+        ...counts,
+        ...paginateRecords(matched.records, page ?? 1),
+      }
   }
 }

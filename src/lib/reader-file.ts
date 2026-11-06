@@ -24,7 +24,9 @@ export function createConditions(
   return {
     query: '',
     filters:
-      type === 'post-votes' ? DEFAULT_VOTE_FILTERS : DEFAULT_LIST_FILTERS,
+      type === 'post-votes' || type === 'comment-votes'
+        ? DEFAULT_VOTE_FILTERS
+        : DEFAULT_LIST_FILTERS,
     page: 1,
   }
 }

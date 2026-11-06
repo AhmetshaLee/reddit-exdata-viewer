@@ -1,21 +1,11 @@
 import type { PostEntry } from '../lib/post-list'
+import { getVoteLabel } from '../lib/votes'
 import styles from './posts.module.css'
-
-const directionLabels: Record<string, string> = {
-  up: 'Нравится',
-  down: 'Не нравится',
-  none: 'Не указана',
-}
 
 export default function PostCard({ post }: { post: PostEntry }) {
   const { record, href, title, communityLabel } = post
-  let directionLabel = record.direction
-  if (
-    record.direction !== undefined &&
-    Object.hasOwn(directionLabels, record.direction)
-  ) {
-    directionLabel = directionLabels[record.direction]
-  }
+  const directionLabel =
+    record.direction !== undefined ? getVoteLabel(record.direction) : null
 
   const content = (
     <>

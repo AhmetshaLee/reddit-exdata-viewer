@@ -21,6 +21,7 @@ type OpenedSource = {
 
 const FILE_MENU_ITEMS: Record<RedditFileData['type'], ReaderMenuItemId> = {
   'post-votes': 'post-votes',
+  'comment-votes': 'comment-votes',
   'saved-posts': 'saved-posts',
   'hidden-posts': 'hidden-posts',
   'user-preferences': 'settings',
