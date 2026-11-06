@@ -140,6 +140,7 @@ export default function ArchiveReader() {
         'pageCount' in list &&
         list.pageCount > 0 && (
           <ReaderPagination
+            disabled={source.isReading}
             page={list.page}
             pageCount={list.pageCount}
             totalRecords={list.matchedRecords}

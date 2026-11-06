@@ -118,6 +118,7 @@ export function useReader() {
 
   function changePage(nextPage: number) {
     if (
+      isReading ||
       !list ||
       !('pageCount' in list) ||
       nextPage < 1 ||

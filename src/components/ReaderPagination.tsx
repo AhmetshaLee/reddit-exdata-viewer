@@ -5,6 +5,7 @@ type ReaderPaginationProps = {
   pageCount: number
   totalRecords: number
   pageSize: number
+  disabled: boolean
   onPageChange: (page: number) => void
 }
 
@@ -13,6 +14,7 @@ export default function ReaderPagination({
   pageCount,
   totalRecords,
   pageSize,
+  disabled,
   onPageChange,
 }: ReaderPaginationProps) {
   const firstRecord = (page - 1) * pageSize + 1
@@ -28,7 +30,7 @@ export default function ReaderPagination({
           className={styles.action}
           type="button"
           aria-label="Предыдущая страница"
-          disabled={page === 1}
+          disabled={disabled || page === 1}
           onClick={() => onPageChange(page - 1)}
         >
           ‹
@@ -36,6 +38,7 @@ export default function ReaderPagination({
         <select
           className={styles.select}
           value={page}
+          disabled={disabled}
           aria-label="Текущая страница"
           onChange={(event) => onPageChange(Number(event.currentTarget.value))}
         >
@@ -51,7 +54,7 @@ export default function ReaderPagination({
           className={styles.action}
           type="button"
           aria-label="Следующая страница"
-          disabled={page === pageCount}
+          disabled={disabled || page === pageCount}
           onClick={() => onPageChange(page + 1)}
         >
           ›
