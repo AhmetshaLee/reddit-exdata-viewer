@@ -1,6 +1,6 @@
-import styles from './pagination.module.css'
+import styles from './reader-pagination.module.css'
 
-type PaginationProps = {
+type ReaderPaginationProps = {
   page: number
   pageCount: number
   totalRecords: number
@@ -8,13 +8,13 @@ type PaginationProps = {
   onPageChange: (page: number) => void
 }
 
-export default function Pagination({
+export default function ReaderPagination({
   page,
   pageCount,
   totalRecords,
   pageSize,
   onPageChange,
-}: PaginationProps) {
+}: ReaderPaginationProps) {
   const firstRecord = (page - 1) * pageSize + 1
   const lastRecord = Math.min(page * pageSize, totalRecords)
 

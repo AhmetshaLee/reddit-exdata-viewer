@@ -1,6 +1,6 @@
 import { Head } from 'minista/head'
 
-import PostVotesReader from '../components/PostVotesReader'
+import ArchiveReader from '../components/ArchiveReader'
 import '../styles/global.css'
 import styles from './index.module.css'
 
@@ -19,7 +19,7 @@ export default function HomePage() {
         <span className={styles.bannerPlaceholder}>Место для баннера</span>
       </header>
 
-      <PostVotesReader client:load />
+      <ArchiveReader client:load />
 
       <footer className={styles.footer}>
         <div className={styles.container}>

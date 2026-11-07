@@ -1,0 +1,27 @@
+.message {
+  margin-block: 20px;
+}
+
+.emptyState {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 16px;
+  min-height: 240px;
+}
+
+.emptyMessage {
+  text-align: center;
+}
+
+.emptyIllustration {
+  width: 100px;
+  height: 100px;
+  background-color: var(--color-banner);
+}
+
+.listDivider {
+  margin: 16px 16px 20px;
+  border: 0;
+  border-top: 2px dashed var(--color-border-strong);
+}
