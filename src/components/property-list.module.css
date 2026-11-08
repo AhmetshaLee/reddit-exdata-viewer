@@ -1,0 +1,23 @@
+.list {
+  display: grid;
+  gap: 8px;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 12px;
+  border-radius: var(--radius-small);
+  color: var(--color-text);
+  background-color: var(--color-surface-inset);
+  overflow-wrap: anywhere;
+}
+
+.name {
+  font-weight: 700;
+}
+
+.value {
+  white-space: pre-wrap;
+}

@@ -5,16 +5,22 @@ import { PAGE_SIZE } from '../lib/pagination'
 import type { RedditFileData } from '../lib/read-reddit-source'
 import layout from '../pages/index.module.css'
 import FileUploadView from './FileUploadView'
+import CommentListView from './CommentListView'
 import PostListView from './PostListView'
+import PropertyListView from './PropertyListView'
 import ReaderLayout from './ReaderLayout'
 import ReaderMenu from './ReaderMenu'
 import ReaderPagination from './ReaderPagination'
 import styles from './reader-results.module.css'
 
 const FILE_TITLES: Record<RedditFileData['type'], string> = {
-  'post-votes': 'Оценки',
+  'post-votes': 'Оценённые посты',
+  'comment-votes': 'Оценённые комментарии',
+  'saved-comments': 'Сохранённые комментарии',
   'saved-posts': 'Сохранённые посты',
   'hidden-posts': 'Скрытые посты',
+  'user-preferences': 'Настройки Reddit',
+  statistics: 'Статистика',
 }
 
 export default function ArchiveReader() {
@@ -44,6 +50,30 @@ export default function ArchiveReader() {
     if (!list) return null
 
     switch (list.type) {
+      case 'comment-votes':
+      case 'saved-comments':
+        return (
+          <CommentListView
+            {...list}
+            {...fileProps}
+            title={title}
+            query={content.query}
+            onQueryChange={content.changeQuery}
+            onFiltersChange={content.changeFilters}
+            onReset={content.resetConditions}
+          />
+        )
+      case 'user-preferences':
+      case 'statistics':
+        return (
+          <PropertyListView
+            {...list}
+            {...fileProps}
+            query={content.query}
+            onQueryChange={content.changeQuery}
+            onReset={content.resetConditions}
+          />
+        )
       case 'post-votes':
       case 'saved-posts':
       case 'hidden-posts':
@@ -62,7 +92,7 @@ export default function ArchiveReader() {
   }
 
   useEffect(() => {
-    if (!source.hasSource) return
+    if (import.meta.env.DEV || !source.hasSource) return
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault()
@@ -107,8 +137,10 @@ export default function ArchiveReader() {
       }
       pagination={
         list &&
+        'pageCount' in list &&
         list.pageCount > 0 && (
           <ReaderPagination
+            disabled={source.isReading}
             page={list.page}
             pageCount={list.pageCount}
             totalRecords={list.matchedRecords}

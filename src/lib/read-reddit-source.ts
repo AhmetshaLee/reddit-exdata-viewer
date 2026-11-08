@@ -1,18 +1,28 @@
 import { unzipRaw, type ZipEntry, type ZipInfoRaw } from 'unzipit'
 
-import { parsePostVotes, type PostVote } from './post-votes'
-import { parsePostReferences, type PostReference } from './post-references'
+import { parseVotes, type VoteRecord } from './votes'
+import { parseLinkRecords, type LinkRecord } from './link-records'
+import { parseUserPreferences, type UserPreference } from './user-preferences'
+import { parseStatistics, type Statistic } from './statistics'
 
 const SUPPORTED_CSV_FILES = [
   'post_votes.csv',
+  'comment_votes.csv',
+  'saved_comments.csv',
   'saved_posts.csv',
   'hidden_posts.csv',
+  'user_preferences.csv',
+  'statistics.csv',
 ]
 
 export type RedditFileData =
-  | { type: 'post-votes'; records: PostVote[] }
-  | { type: 'saved-posts'; records: PostReference[] }
-  | { type: 'hidden-posts'; records: PostReference[] }
+  | { type: 'post-votes'; records: VoteRecord[] }
+  | { type: 'comment-votes'; records: VoteRecord[] }
+  | { type: 'saved-comments'; records: LinkRecord[] }
+  | { type: 'saved-posts'; records: LinkRecord[] }
+  | { type: 'hidden-posts'; records: LinkRecord[] }
+  | { type: 'user-preferences'; records: UserPreference[] }
+  | { type: 'statistics'; records: Statistic[] }
 
 export async function readRedditSource(file: File): Promise<RedditFileData[]> {
   const name = file.name.toLowerCase()
@@ -37,11 +47,19 @@ export async function readRedditSource(file: File): Promise<RedditFileData[]> {
 function parseRedditFile(name: string, text: string): RedditFileData {
   switch (name) {
     case 'post_votes.csv':
-      return { type: 'post-votes', records: parsePostVotes(text) }
+      return { type: 'post-votes', records: parseVotes(text) }
+    case 'comment_votes.csv':
+      return { type: 'comment-votes', records: parseVotes(text) }
+    case 'saved_comments.csv':
+      return { type: 'saved-comments', records: parseLinkRecords(text) }
     case 'saved_posts.csv':
-      return { type: 'saved-posts', records: parsePostReferences(text) }
+      return { type: 'saved-posts', records: parseLinkRecords(text) }
     case 'hidden_posts.csv':
-      return { type: 'hidden-posts', records: parsePostReferences(text) }
+      return { type: 'hidden-posts', records: parseLinkRecords(text) }
+    case 'user_preferences.csv':
+      return { type: 'user-preferences', records: parseUserPreferences(text) }
+    case 'statistics.csv':
+      return { type: 'statistics', records: parseStatistics(text) }
     default:
       throw new Error(`Файл ${name} не поддерживается.`)
   }
@@ -80,7 +98,13 @@ async function readArchive(file: File): Promise<RedditFileData[]> {
       } catch {
         throw new Error(`Не удалось извлечь ${entry.name} из ZIP-архива.`)
       }
-      return parseRedditFile(entry.name.toLowerCase(), text)
+      try {
+        return parseRedditFile(entry.name.toLowerCase(), text)
+      } catch (cause) {
+        const message =
+          cause instanceof Error ? cause.message : 'Не удалось разобрать CSV.'
+        throw new Error(`Файл ${entry.name}: ${message}`, { cause })
+      }
     }),
   )
 }

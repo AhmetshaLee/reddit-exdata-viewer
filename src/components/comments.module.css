@@ -1,0 +1,38 @@
+.cards {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+}
+
+.card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: var(--radius-small);
+  background-color: var(--color-surface-inset);
+  color: var(--color-text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.title {
+  font-size: 18px;
+}
+
+.community,
+.description,
+.direction {
+  font-size: 13px;
+}
+
+.parent {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+a.card:hover .title {
+  text-decoration: underline;
+}

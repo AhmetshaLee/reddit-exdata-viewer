@@ -1,3 +1,5 @@
+import type { LinkRecord } from './link-records'
+
 export type ListFilters = { community: string; direction?: string }
 export const DEFAULT_LIST_FILTERS: ListFilters = { community: 'all' }
 export const DEFAULT_VOTE_FILTERS: ListFilters = {
@@ -6,7 +8,7 @@ export const DEFAULT_VOTE_FILTERS: ListFilters = {
 }
 
 type FilterableEntry = {
-  record: { direction?: string }
+  record: LinkRecord & { direction?: string }
   community: string
   searchText: string
 }
