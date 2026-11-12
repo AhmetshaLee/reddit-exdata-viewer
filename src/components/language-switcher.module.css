@@ -1,0 +1,29 @@
+.segments {
+  display: flex;
+  padding: 3px;
+  border-radius: var(--radius-control);
+  background-color: var(--color-surface-recessed);
+}
+
+.option {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  min-height: 30px;
+  padding: 4px;
+  border-radius: var(--radius-small);
+  color: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+a.option:hover {
+  text-decoration: underline;
+}
+
+.option[aria-current='page'] {
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+  font-weight: 700;
+}

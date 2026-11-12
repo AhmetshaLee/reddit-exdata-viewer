@@ -43,8 +43,17 @@
   line-height: 1.4;
 }
 
-.intro {
+.uploadIntro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: start;
+  gap: 16px;
   margin: 24px 48px;
+}
+
+.intro {
+  min-width: 0;
+  line-height: 1.5;
 }
 
 .dropZone {

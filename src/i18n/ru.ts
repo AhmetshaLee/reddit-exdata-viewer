@@ -71,6 +71,7 @@ export const ru = {
   description: 'Приложение для локального просмотра архива Reddit',
   footer: 'Просмотр данных Reddit на вашем устройстве',
   footerNote: 'exdata [exported data] — экспортированные данные',
+  language: 'Язык интерфейса',
 
   results: (found: number, total: number) => `Найдено: ${found} из ${total}`,
   range: (first: number, last: number, total: number) =>
