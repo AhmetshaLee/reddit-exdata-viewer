@@ -1,3 +1,4 @@
+import type { Messages } from '../i18n'
 import type { FilterChoice } from '../lib/filter-choices'
 import FilePickerButton from './FilePickerButton'
 import styles from './reader-toolbar.module.css'
@@ -11,6 +12,7 @@ export type ReaderFilterGroup = {
 }
 
 type ReaderToolbarProps = {
+  text: Messages
   onFileSelected: (file: File) => void
   disabled: boolean
   fileName: string
@@ -23,6 +25,7 @@ type ReaderToolbarProps = {
 }
 
 export default function ReaderToolbar({
+  text,
   onFileSelected,
   disabled,
   fileName,
@@ -34,9 +37,9 @@ export default function ReaderToolbar({
   matchedRecords,
 }: ReaderToolbarProps) {
   return (
-    <section className={styles.toolbar} aria-label="Панель поиска и фильтров">
+    <section className={styles.toolbar} aria-label={text.toolbar}>
       <div className={styles.documentBar}>
-        <div className={styles.documentTab} aria-label="Открытый файл">
+        <div className={styles.documentTab} aria-label={text.openedFile}>
           <span className={styles.fileName} title={fileName}>
             {fileName}
           </span>
@@ -46,7 +49,7 @@ export default function ReaderToolbar({
           disabled={disabled}
           onFileSelected={onFileSelected}
         >
-          Открыть файл
+          {text.openFile}
         </FilePickerButton>
       </div>
       <form
@@ -58,7 +61,7 @@ export default function ReaderToolbar({
         }}
       >
         <label className={styles.searchField}>
-          <span>Поиск</span>
+          <span>{text.search}</span>
           <input
             className={styles.search}
             type="search"
@@ -72,7 +75,7 @@ export default function ReaderToolbar({
         <div className={styles.filterRow}>
           {groups.length > 0 && (
             <details>
-              <summary className={styles.summary}>Фильтры</summary>
+              <summary className={styles.summary}>{text.filters}</summary>
               <div className={styles.filters}>
                 {groups.map(({ name, legend, choices, selected, onChange }) => (
                   <fieldset
@@ -110,12 +113,12 @@ export default function ReaderToolbar({
               type="reset"
               disabled={disabled}
             >
-              Сбросить
+              {text.reset}
             </button>
           </div>
         </div>
         <p className={styles.resultCount} role="status">
-          Найдено: {matchedRecords} из {totalRecords}
+          {text.results(matchedRecords, totalRecords)}
         </p>
       </form>
     </section>

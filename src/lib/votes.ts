@@ -18,15 +18,3 @@ export function parseVotes(text: string): VoteRecord[] {
     direction: row.direction.trim(),
   }))
 }
-
-const DIRECTION_LABELS: Record<string, string> = {
-  up: 'Нравится',
-  down: 'Не нравится',
-  none: 'Не указана',
-}
-
-export function getVoteLabel(direction: string): string {
-  return Object.hasOwn(DIRECTION_LABELS, direction)
-    ? DIRECTION_LABELS[direction]
-    : direction
-}

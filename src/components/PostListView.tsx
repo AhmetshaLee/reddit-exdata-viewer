@@ -1,3 +1,4 @@
+import { getVoteLabel, type Messages } from '../i18n'
 import type { FilterChoice } from '../lib/filter-choices'
 import type { ListFilters } from '../lib/list-filters'
 import type { PostEntry } from '../lib/post-list'
@@ -7,6 +8,7 @@ import ReaderToolbar, { type ReaderFilterGroup } from './ReaderToolbar'
 import styles from './posts.module.css'
 
 type PostListViewProps = {
+  text: Messages
   title: string
   fileName: string
   query: string
@@ -25,6 +27,7 @@ type PostListViewProps = {
 }
 
 export default function PostListView({
+  text,
   title,
   fileName,
   query,
@@ -44,8 +47,14 @@ export default function PostListView({
   const groups: ReaderFilterGroup[] = [
     {
       name: 'community',
-      legend: 'Сабреддиты',
-      choices: communityChoices,
+      legend: text.communities,
+      choices: communityChoices.map((choice) => ({
+        ...choice,
+        label:
+          choice.value === 'all'
+            ? text.all
+            : choice.label || text.unknownCommunity,
+      })),
       selected: filters.community,
       onChange: (community) => onFiltersChange({ ...filters, community }),
     },
@@ -53,8 +62,12 @@ export default function PostListView({
   if (voteChoices) {
     groups.unshift({
       name: 'direction',
-      legend: 'Оценки',
-      choices: voteChoices,
+      legend: text.votesTitle,
+      choices: voteChoices.map((choice) => ({
+        ...choice,
+        label:
+          choice.value === 'all' ? text.all : getVoteLabel(choice.value, text),
+      })),
       selected: filters.direction ?? 'all',
       onChange: (direction) => onFiltersChange({ ...filters, direction }),
     })
@@ -62,13 +75,15 @@ export default function PostListView({
 
   return (
     <ReaderListFrame
+      text={text}
       totalRecords={totalRecords}
       matchedRecords={matchedRecords}
-      emptyMessage="В файле нет постов"
+      emptyMessage={text.emptyPosts}
       toolbar={
         <ReaderToolbar
+          text={text}
           search={{ query, onChange: onQueryChange }}
-          searchPlaceholder="Поиск по названию, ссылке или ID поста"
+          searchPlaceholder={text.searchPosts}
           onReset={onReset}
           groups={groups}
           fileName={fileName}
@@ -81,7 +96,7 @@ export default function PostListView({
     >
       <ol className={styles.cards} aria-label={title} start={start + 1}>
         {pageRecords.map((entry) => (
-          <PostCard key={entry.sourceIndex} post={entry} />
+          <PostCard text={text} key={entry.sourceIndex} post={entry} />
         ))}
       </ol>
     </ReaderListFrame>

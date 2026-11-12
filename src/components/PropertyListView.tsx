@@ -1,9 +1,11 @@
+import type { Messages } from '../i18n'
 import type { PropertyEntry } from '../lib/property-list'
 import ReaderListFrame from './ReaderListFrame'
 import ReaderToolbar from './ReaderToolbar'
 import styles from './property-list.module.css'
 
 type PropertyListViewProps = {
+  text: Messages
   records: PropertyEntry[]
   totalRecords: number
   matchedRecords: number
@@ -16,6 +18,7 @@ type PropertyListViewProps = {
 }
 
 export default function PropertyListView({
+  text,
   records,
   totalRecords,
   matchedRecords,
@@ -28,13 +31,15 @@ export default function PropertyListView({
 }: PropertyListViewProps) {
   return (
     <ReaderListFrame
+      text={text}
       totalRecords={totalRecords}
       matchedRecords={matchedRecords}
-      emptyMessage="В файле нет записей"
+      emptyMessage={text.emptyRecords}
       toolbar={
         <ReaderToolbar
+          text={text}
           search={{ query, onChange: onQueryChange }}
-          searchPlaceholder="Поиск по названию или значению"
+          searchPlaceholder={text.searchProperties}
           onReset={onReset}
           fileName={fileName}
           disabled={disabled}

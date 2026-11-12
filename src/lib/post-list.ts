@@ -6,7 +6,7 @@ export type PostEntry = {
   record: PostRecord
   sourceIndex: number
   href: string | null
-  title: string
+  title: string | null
   community: string
   communityLabel: string
   searchText: string
@@ -15,15 +15,13 @@ export type PostEntry = {
 export function preparePosts(records: PostRecord[]): PostEntry[] {
   return records.map((record, sourceIndex) => {
     const link = getRedditPostLink(record.permalink)
-    const communityLabel = link?.subreddit
-      ? `r/${link.subreddit}`
-      : 'Сабреддит не указан'
+    const communityLabel = link?.subreddit ? `r/${link.subreddit}` : ''
 
     return {
       record,
       sourceIndex,
       href: link?.href ?? null,
-      title: link?.title ?? `Публикация #${record.id}`,
+      title: link?.title ?? null,
       community: link?.subreddit ? communityLabel.toLowerCase() : 'unknown',
       communityLabel,
       searchText:

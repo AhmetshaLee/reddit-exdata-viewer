@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 
 import { useReader } from '../hooks/useReader'
+import { ru as text } from '../i18n/ru'
 import { PAGE_SIZE } from '../lib/pagination'
 import type { RedditFileData } from '../lib/read-reddit-source'
 import layout from '../pages/index.module.css'
@@ -14,25 +15,22 @@ import ReaderPagination from './ReaderPagination'
 import styles from './reader-results.module.css'
 
 const FILE_TITLES: Record<RedditFileData['type'], string> = {
-  'post-votes': 'Оценённые посты',
-  'comment-votes': 'Оценённые комментарии',
-  'saved-comments': 'Сохранённые комментарии',
-  'saved-posts': 'Сохранённые посты',
-  'hidden-posts': 'Скрытые посты',
-  'user-preferences': 'Настройки Reddit',
-  statistics: 'Статистика',
+  'post-votes': text.votedPosts,
+  'comment-votes': text.votedComments,
+  'saved-comments': text.savedComments,
+  'saved-posts': text.savedPosts,
+  'hidden-posts': text.hiddenPosts,
+  'user-preferences': text.settingsTitle,
+  statistics: text.statistics,
 }
 
 export default function ArchiveReader() {
   const { source, menu, content } = useReader()
   const { selection, list } = content
-  const title = selection
-    ? FILE_TITLES[selection.file.type]
-    : 'Ваш архив Reddit'
-  const menuHint = source.hasSource
-    ? 'Доступны данные из открытого файла'
-    : 'Пункты меню станут доступны после открытия CSV или ZIP'
+  const title = selection ? FILE_TITLES[selection.file.type] : text.archiveTitle
+  const menuHint = source.hasSource ? text.menuHint : text.menuEmptyHint
   const fileProps = {
+    text,
     fileName: source.fileName,
     disabled: source.isReading,
     onFileSelected: source.openFile,
@@ -42,6 +40,7 @@ export default function ArchiveReader() {
     if (!source.hasSource) {
       return (
         <FileUploadView
+          text={text}
           disabled={source.isReading}
           onFileSelected={source.openFile}
         />
@@ -106,26 +105,28 @@ export default function ArchiveReader() {
 
   return (
     <ReaderLayout
+      text={text}
       title={title}
       menu={
         <>
           <div className={layout.sidebarPanel}>
             <div className={layout.themeControl}>
-              <span>Тема страницы</span>
+              <span>{text.theme}</span>
               <button
                 className={layout.themeButton}
                 type="button"
-                aria-label="Сменить тему страницы"
+                aria-label={text.changeTheme}
                 disabled
               >
-                <span className={layout.themeLight}>С</span>
-                <span className={layout.themeDark}>Т</span>
+                <span className={layout.themeLight}>{text.light}</span>
+                <span className={layout.themeDark}>{text.dark}</span>
               </button>
             </div>
 
             <hr className={layout.sidebarDivider} />
 
             <ReaderMenu
+              text={text}
               activeMenuItem={menu.activeMenuItem}
               availableMenuItems={menu.availableMenuItems}
               disabled={source.isReading}
@@ -140,6 +141,7 @@ export default function ArchiveReader() {
         'pageCount' in list &&
         list.pageCount > 0 && (
           <ReaderPagination
+            text={text}
             disabled={source.isReading}
             page={list.page}
             pageCount={list.pageCount}
@@ -152,7 +154,7 @@ export default function ArchiveReader() {
     >
       {source.isReading && (
         <p className={styles.message} role="status">
-          Чтение файла…
+          {text.reading}
         </p>
       )}
       {source.error && (

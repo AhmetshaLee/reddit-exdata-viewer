@@ -1,6 +1,8 @@
+import type { Messages } from '../i18n'
 import styles from './reader-pagination.module.css'
 
 type ReaderPaginationProps = {
+  text: Messages
   page: number
   pageCount: number
   totalRecords: number
@@ -10,6 +12,7 @@ type ReaderPaginationProps = {
 }
 
 export default function ReaderPagination({
+  text,
   page,
   pageCount,
   totalRecords,
@@ -21,15 +24,15 @@ export default function ReaderPagination({
   const lastRecord = Math.min(page * pageSize, totalRecords)
 
   return (
-    <nav className={styles.panel} aria-label="Пагинация">
+    <nav className={styles.panel} aria-label={text.pagination}>
       <p className={styles.summary}>
-        Страница <strong>{page}</strong> из {pageCount}
+        {text.page} <strong>{page}</strong> {text.of} {pageCount}
       </p>
       <div className={styles.controls}>
         <button
           className={styles.action}
           type="button"
-          aria-label="Предыдущая страница"
+          aria-label={text.previous}
           disabled={disabled || page === 1}
           onClick={() => onPageChange(page - 1)}
         >
@@ -39,7 +42,7 @@ export default function ReaderPagination({
           className={styles.select}
           value={page}
           disabled={disabled}
-          aria-label="Текущая страница"
+          aria-label={text.current}
           onChange={(event) => onPageChange(Number(event.currentTarget.value))}
         >
           {Array.from({ length: pageCount }, (_, index) => index + 1).map(
@@ -53,7 +56,7 @@ export default function ReaderPagination({
         <button
           className={styles.action}
           type="button"
-          aria-label="Следующая страница"
+          aria-label={text.next}
           disabled={disabled || page === pageCount}
           onClick={() => onPageChange(page + 1)}
         >
@@ -61,7 +64,7 @@ export default function ReaderPagination({
         </button>
       </div>
       <p className={styles.caption}>
-        {firstRecord}–{lastRecord} из {totalRecords} записей
+        {text.range(firstRecord, lastRecord, totalRecords)}
       </p>
     </nav>
   )
