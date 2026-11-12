@@ -4,6 +4,7 @@ import { useReader } from '../hooks/useReader'
 import { ru as text } from '../i18n/ru'
 import { PAGE_SIZE } from '../lib/pagination'
 import type { RedditFileData } from '../lib/read-reddit-source'
+import { formatReaderError } from '../lib/reader-error'
 import layout from '../pages/index.module.css'
 import FileUploadView from './FileUploadView'
 import CommentListView from './CommentListView'
@@ -157,9 +158,9 @@ export default function ArchiveReader() {
           {text.reading}
         </p>
       )}
-      {source.error && (
+      {source.error !== null && (
         <p className={styles.message} role="alert">
-          {source.error}
+          {formatReaderError(source.error, text)}
         </p>
       )}
       {renderContent()}

@@ -1,4 +1,5 @@
 import { parseCsv } from './csv'
+import { ReaderError } from './reader-error'
 
 export type VoteRecord = { id: string; permalink: string; direction: string }
 
@@ -10,7 +11,7 @@ export function parseVotes(text: string): VoteRecord[] {
         !row.id?.trim() || !row.permalink?.trim() || !row.direction?.trim(),
     )
   ) {
-    throw new Error('В CSV есть запись без ID, ссылки или оценки.')
+    throw new ReaderError('invalidVote')
   }
   return rows.map((row) => ({
     id: row.id.trim(),

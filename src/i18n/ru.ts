@@ -80,4 +80,32 @@ export const ru = {
   parentPost: (title: string) => `К посту: ${title}`,
   yourVote: (label: string) => `Ваша оценка: ${label}`,
   votes: { up: 'Нравится', down: 'Не нравится', none: 'Не указана' },
+
+  errors: {
+    unexpected: () => 'При открытии данных произошла непредвиденная ошибка.',
+    invalidCsv: () =>
+      'Не удалось разобрать CSV. Проверьте разделители и кавычки.',
+    invalidVote: () => 'В CSV есть запись без ID, ссылки или оценки.',
+    invalidLink: () => 'В CSV есть запись без ID или ссылки.',
+    invalidPreference: () =>
+      'В CSV есть запись без имени параметра или поля значения.',
+    invalidStatistic: () =>
+      'В CSV есть запись без названия показателя или поля значения.',
+    readFile: () => 'Не удалось прочитать файл. Выберите его ещё раз.',
+    openZip: () => 'Не удалось открыть ZIP-архив. Проверьте выбранный файл.',
+    columns: ([columns]: readonly string[]) =>
+      `Нужен CSV с колонками ${columns}.`,
+    selectSource: ([names]: readonly string[]) =>
+      `Выберите ${names} или ZIP-архив данных Reddit.`,
+    unsupported: ([name]: readonly string[]) =>
+      `Файл ${name} не поддерживается.`,
+    duplicate: ([name]: readonly string[]) =>
+      `В ZIP-архиве найдено несколько ${name}. Откройте нужный CSV отдельно.`,
+    noSupported: ([names]: readonly string[]) =>
+      `В ZIP-архиве не найдены поддерживаемые файлы: ${names}.`,
+    extract: ([name]: readonly string[]) =>
+      `Не удалось извлечь ${name} из ZIP-архива.`,
+    fileContext: ([name, detail]: readonly string[]) =>
+      `Файл ${name}: ${detail}`,
+  },
 }
