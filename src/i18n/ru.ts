@@ -38,6 +38,8 @@ export const ru = {
 
   intro: 'Откройте архив, чтобы просмотреть свои данные',
   uploadTitle: 'Перетащите архив сюда',
+  dropFile: 'Отпустите файл, чтобы открыть',
+  singleFileOnly: 'Перетащите один CSV-файл или ZIP-архив за раз',
   uploadDescription: 'или выберите файл на компьютере',
   chooseArchive: 'Выбрать архив',
   openFile: 'Открыть файл',

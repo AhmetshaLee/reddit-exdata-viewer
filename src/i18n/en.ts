@@ -40,6 +40,8 @@ export const en = {
 
   intro: 'Open your archive to browse your data',
   uploadTitle: 'Drop your archive here',
+  dropFile: 'Release the file to open it',
+  singleFileOnly: 'Drop one CSV file or ZIP archive at a time',
   uploadDescription: 'or select a file on your computer',
   chooseArchive: 'Choose archive',
   openFile: 'Open file',

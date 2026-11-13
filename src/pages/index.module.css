@@ -88,6 +88,19 @@
   line-height: 1.4;
 }
 
+.dropZone[data-dragging='true'] {
+  background-color: var(--color-control-disabled);
+}
+
+.dropZone[data-dragging='true']::before {
+  border-color: var(--color-accent);
+  border-style: solid;
+}
+
+.dropError {
+  margin-top: 16px;
+}
+
 .uploadDescription {
   margin-block: 8px 24px;
 }
