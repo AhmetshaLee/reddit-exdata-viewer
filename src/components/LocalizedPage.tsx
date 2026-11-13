@@ -1,6 +1,7 @@
 import { Head } from 'minista/head'
 
 import { dictionaries, type Locale } from '../i18n'
+import themeSetup from '../scripts/theme-setup.js?raw'
 import ArchiveReader from './ArchiveReader'
 import '../styles/global.css'
 import styles from '../pages/index.module.css'
@@ -10,7 +11,8 @@ export default function LocalizedPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <Head htmlAttributes={{ lang: locale }}>
+      <Head htmlAttributes={{ lang: locale, 'data-theme': 'light' }}>
+        <script dangerouslySetInnerHTML={{ __html: themeSetup }} />
         <title>reddit-exdata-viewer</title>
         <meta name="description" content={text.description} />
       </Head>

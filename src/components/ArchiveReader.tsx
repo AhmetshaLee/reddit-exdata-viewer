@@ -38,6 +38,18 @@ export default function ArchiveReader({ locale }: { locale: Locale }) {
     onFileSelected: source.openFile,
   }
 
+  function changeTheme() {
+    const root = document.documentElement
+    const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark'
+    root.dataset.theme = nextTheme
+
+    try {
+      localStorage.setItem('reddit-exdata-viewer-theme', nextTheme)
+    } catch (error) {
+      console.warn('Не удалось сохранить выбранную тему.', error)
+    }
+  }
+
   function renderContent() {
     if (!source.hasSource) {
       return (
@@ -119,7 +131,7 @@ export default function ArchiveReader({ locale }: { locale: Locale }) {
                 className={layout.themeButton}
                 type="button"
                 aria-label={text.changeTheme}
-                disabled
+                onClick={changeTheme}
               >
                 <span className={layout.themeLight}>{text.light}</span>
                 <span className={layout.themeDark}>{text.dark}</span>
