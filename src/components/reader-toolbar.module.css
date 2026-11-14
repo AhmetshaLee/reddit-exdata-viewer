@@ -40,14 +40,24 @@
   padding: 4px 8px;
   border: 1px solid transparent;
   border-radius: var(--radius-control);
-  color: var(--color-text);
-  background-color: var(--color-surface-inset);
+  color: var(--color-control-text);
+  background-color: var(--color-control-background);
   font-size: 13px;
 }
 
 .search::placeholder {
   color: var(--color-text-muted);
   opacity: 1;
+}
+
+.search:disabled {
+  color: var(--color-control-disabled-text);
+  background-color: var(--color-control-disabled-background);
+  cursor: not-allowed;
+}
+
+.search:disabled::placeholder {
+  color: var(--color-control-disabled-text);
 }
 
 .filterRow {
@@ -121,8 +131,8 @@
   padding: 4px 8px;
   border: 1px solid transparent;
   border-radius: var(--radius-small);
-  color: var(--color-text);
-  background-color: var(--color-surface-inset);
+  color: var(--color-control-text);
+  background-color: var(--color-control-background);
   font-size: 13px;
   white-space: nowrap;
 }
@@ -141,6 +151,12 @@
 .choiceInput:checked + .chip {
   color: var(--color-on-accent);
   background-color: var(--color-accent);
+}
+
+.choiceInput:disabled + .chip {
+  color: var(--color-control-disabled-text);
+  background-color: var(--color-control-disabled-background);
+  cursor: not-allowed;
 }
 
 .choiceInput:focus-visible + .chip {
@@ -168,6 +184,8 @@
 }
 
 .button:disabled {
+  color: var(--color-control-disabled-text);
+  background-color: var(--color-control-disabled-background);
   cursor: not-allowed;
 }
 
@@ -182,8 +200,13 @@
   text-underline-offset: 3px;
 }
 
-.textButton:hover {
+.textButton:not(:disabled):hover {
   text-decoration: underline;
+}
+
+.textButton:disabled {
+  color: var(--color-control-disabled-text);
+  cursor: not-allowed;
 }
 
 /* Расширяем область клика, не увеличивая размеры в раскладке */

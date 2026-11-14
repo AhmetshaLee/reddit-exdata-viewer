@@ -38,7 +38,7 @@
 .title {
   padding: 6px 32px;
   border-radius: 3px;
-  background-color: var(--color-accent);
+  background-color: var(--color-heading-background);
   font-size: 28px;
   line-height: 1.4;
 }
@@ -195,7 +195,7 @@
   display: block;
   padding: 6px 8px;
   color: var(--color-panel-text);
-  background-color: var(--color-accent);
+  background-color: var(--color-heading-background);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -229,7 +229,13 @@
   white-space: nowrap;
 }
 
-.themeButton:disabled,
+.uploadButton:disabled,
+.themeButton:disabled {
+  color: var(--color-control-disabled-text);
+  background-color: var(--color-control-disabled-background);
+  cursor: not-allowed;
+}
+
 .menuButton:disabled {
   cursor: not-allowed;
 }

@@ -26,8 +26,8 @@
   height: 32px;
   border: 0;
   border-radius: var(--radius-small);
-  color: var(--color-text);
-  background-color: var(--color-surface-inset);
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
   font-weight: 700;
   text-align: center;
 }
@@ -38,8 +38,10 @@
   line-height: 1;
 }
 
-.action:disabled {
-  opacity: 0.45;
+.action:disabled,
+.select:disabled {
+  color: var(--color-control-disabled-text);
+  background-color: var(--color-control-disabled-background);
   cursor: not-allowed;
 }
 
