@@ -168,8 +168,6 @@
 }
 
 .button:disabled {
-  color: var(--color-text-disabled);
-  background-color: var(--color-control-disabled);
   cursor: not-allowed;
 }
 
