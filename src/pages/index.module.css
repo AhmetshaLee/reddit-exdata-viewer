@@ -38,7 +38,7 @@
 .title {
   padding: 6px 32px;
   border-radius: 3px;
-  background-color: var(--color-heading);
+  background-color: var(--color-accent);
   font-size: 28px;
   line-height: 1.4;
 }
@@ -89,7 +89,7 @@
 }
 
 .dropZone[data-dragging='true'] {
-  background-color: var(--color-control-disabled);
+  background-color: var(--color-drop-active);
 }
 
 .dropZone[data-dragging='true']::before {
@@ -210,7 +210,7 @@
 }
 
 .menuItems > li:nth-child(even) .menuButton {
-  background-color: var(--color-control-disabled);
+  background-color: var(--color-surface-alternate);
 }
 
 .menuButton {

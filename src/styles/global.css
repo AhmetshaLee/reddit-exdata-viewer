@@ -11,19 +11,21 @@
   --color-banner: #ababb5;
   --color-surface: #4e4c58;
   --color-surface-recessed: #34343c;
-  --color-heading: #696773;
   --color-surface-inset: #e5e5ed;
+  --color-surface-alternate: #cfcfd8;
+  --color-drop-active: #dfdfe8;
   --color-control-disabled: #dfdfe8;
 
   /* Текст */
   --color-text: #32323e;
+  --color-text-muted: #656571;
   --color-text-disabled: #83838e;
   --color-banner-text: #454550;
   --color-panel-text: #fafafd;
   --color-on-accent: #ffffff;
 
   /* Акценты и границы */
-  --color-accent: #696975;
+  --color-accent: #696773;
   --color-focus: #5e5e70;
   --color-border-strong: #9696a3;
 
@@ -49,12 +51,14 @@
   --color-banner: #676773;
   --color-surface: #363641;
   --color-surface-recessed: #24242b;
-  --color-heading: #696975;
   --color-surface-inset: #4e4e59;
+  --color-surface-alternate: #555560;
+  --color-drop-active: #555560;
   --color-control-disabled: #555560;
 
   /* Текст */
   --color-text: #f2f2f6;
+  --color-text-muted: #c0c0cc;
   --color-text-disabled: #a1a1ad;
   --color-banner-text: #f1f1f5;
 
