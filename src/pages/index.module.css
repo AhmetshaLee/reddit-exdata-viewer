@@ -70,7 +70,7 @@
   padding: 32px;
   border-radius: var(--drop-zone-radius);
   color: var(--color-text);
-  background-color: var(--color-surface-inset);
+  background-color: var(--color-surface-content);
   text-align: center;
 }
 
@@ -89,7 +89,7 @@
 }
 
 .dropZone[data-dragging='true'] {
-  background-color: var(--color-drop-active);
+  background-color: var(--color-drop-dragging);
 }
 
 .dropZone[data-dragging='true']::before {
@@ -220,7 +220,7 @@
   overflow: hidden;
   border: 0;
   color: var(--color-text-disabled);
-  background-color: var(--color-surface-inset);
+  background-color: var(--color-surface-content);
   font-size: 16px;
   font-weight: 700;
   line-height: 1.2;

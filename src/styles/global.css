@@ -12,9 +12,9 @@
   --color-surface: #4e4c58;
   --color-surface-recessed: #34343c;
   --color-heading-background: #5e5e6a;
-  --color-surface-inset: #e5e5ed;
+  --color-surface-content: #e5e5ed;
   --color-surface-alternate: #cfcfd8;
-  --color-drop-active: #dfdfe8;
+  --color-drop-dragging: #dfdfe8;
 
   /* Текст */
   --color-text: #32323e;
@@ -57,9 +57,9 @@
   --color-banner: #676773;
   --color-surface: #363641;
   --color-surface-recessed: #24242b;
-  --color-surface-inset: #4e4e59;
+  --color-surface-content: #4e4e59;
   --color-surface-alternate: #555560;
-  --color-drop-active: #555560;
+  --color-drop-dragging: #555560;
 
   /* Текст */
   --color-text: #f2f2f6;
@@ -73,7 +73,6 @@
 
   /* Элементы управления */
   --color-control-background: #41414d;
-  --color-control-text: var(--color-text);
   --color-control-disabled-background: #43434f;
   --color-control-disabled-text: #9494a2;
 
