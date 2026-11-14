@@ -130,6 +130,7 @@ export default function ArchiveReader({ locale }: { locale: Locale }) {
               <button
                 className={layout.themeButton}
                 type="button"
+                title={text.changeTheme}
                 aria-label={text.changeTheme}
                 onClick={changeTheme}
               >
