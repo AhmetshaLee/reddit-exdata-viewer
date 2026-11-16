@@ -23,7 +23,7 @@ a.option:hover {
 }
 
 .option[aria-current='page'] {
-  color: var(--color-on-accent);
+  color: var(--color-text-light);
   background-color: var(--color-accent);
   font-weight: 700;
 }

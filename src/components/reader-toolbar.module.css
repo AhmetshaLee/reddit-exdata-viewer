@@ -149,7 +149,7 @@
 }
 
 .choiceInput:checked + .chip {
-  color: var(--color-on-accent);
+  color: var(--color-text-light);
   background-color: var(--color-accent);
 }
 
@@ -177,7 +177,7 @@
   padding: 6px 12px;
   border: 0;
   border-radius: var(--radius-control);
-  color: var(--color-on-accent);
+  color: var(--color-text-light);
   background-color: var(--color-accent);
   font-size: 13px;
   font-weight: 700;

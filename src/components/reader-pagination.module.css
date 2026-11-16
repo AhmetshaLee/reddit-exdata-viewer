@@ -3,7 +3,7 @@
   gap: 8px;
   padding: 16px 12px;
   border-radius: 8px;
-  color: var(--color-panel-text);
+  color: var(--color-text-light);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-panel);
   font-variant-numeric: tabular-nums;
@@ -26,7 +26,7 @@
   height: 32px;
   border: 0;
   border-radius: var(--radius-small);
-  color: var(--color-on-accent);
+  color: var(--color-text-light);
   background-color: var(--color-accent);
   font-weight: 700;
   text-align: center;
