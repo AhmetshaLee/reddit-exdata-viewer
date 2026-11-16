@@ -29,7 +29,7 @@
 .main {
   grid-area: main;
   padding: 20px 16px 24px;
-  border-radius: var(--radius-panel);
+  border-radius: var(--radius-panel-large);
   color: var(--color-text-light);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-panel);
@@ -37,7 +37,7 @@
 
 .title {
   padding: 6px 32px;
-  border-radius: 3px;
+  border-radius: var(--radius-small);
   background-color: var(--color-heading-background);
   font-size: 28px;
   line-height: 1.4;
@@ -135,7 +135,7 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   padding: 16px 8px;
-  border-radius: 8px;
+  border-radius: var(--radius-panel);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-panel);
 }

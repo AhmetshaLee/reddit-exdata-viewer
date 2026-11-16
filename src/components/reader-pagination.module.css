@@ -2,7 +2,7 @@
   display: grid;
   gap: 8px;
   padding: 16px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-panel);
   color: var(--color-text-light);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-panel);

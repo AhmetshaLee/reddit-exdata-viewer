@@ -1,6 +1,6 @@
 .segments {
   display: flex;
-  padding: 3px;
+  padding: 4px;
   border-radius: var(--radius-control);
   background-color: var(--color-surface-recessed);
 }

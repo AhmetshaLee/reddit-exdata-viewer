@@ -39,8 +39,9 @@
 
   /* Скругления */
   --radius-small: 2px;
-  --radius-panel: 12px;
   --radius-control: 6px;
+  --radius-panel: 8px;
+  --radius-panel-large: 12px;
 
   /* Макет и отступы */
   --content-width: 980px;
