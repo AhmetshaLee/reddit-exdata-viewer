@@ -6,11 +6,6 @@
   background-color: var(--color-banner);
 }
 
-.bannerPlaceholder {
-  color: var(--color-banner-text);
-  font-size: 14px;
-}
-
 .container {
   width: 100%;
   max-width: var(--content-width);

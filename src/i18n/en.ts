@@ -71,8 +71,9 @@ export const en = {
   page: 'Page',
   of: 'of',
 
-  banner: 'Banner placeholder',
-  description: 'An app for viewing your Reddit archive locally',
+  pageTitle: 'Browse a Reddit data archive',
+  description:
+    'Find saved and voted-on posts and comments in your Reddit archive using search and filters. Files are processed in your browser without being uploaded to a server.',
   footer: 'View Reddit data on your device',
   footerNote: 'exdata stands for exported data',
   language: 'Interface language',
