@@ -58,7 +58,7 @@
 
 .dropZone {
   --drop-zone-radius: 18px;
-  --drop-zone-inset: 10px;
+  --drop-zone-inset: 12px;
 
   position: relative;
   display: flex;
@@ -88,12 +88,8 @@
   line-height: 1.4;
 }
 
-.dropZone[data-dragging='true'] {
-  background-color: var(--color-drop-dragging);
-}
-
 .dropZone[data-dragging='true']::before {
-  border-color: var(--color-accent);
+  border-color: var(--color-focus);
   border-style: solid;
 }
 
