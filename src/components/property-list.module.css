@@ -10,7 +10,7 @@
   padding: 12px;
   border-radius: var(--radius-small);
   color: var(--color-text);
-  background-color: var(--color-surface-inset);
+  background-color: var(--color-surface-content);
   overflow-wrap: anywhere;
 }
 

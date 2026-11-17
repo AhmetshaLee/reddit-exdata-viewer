@@ -32,7 +32,7 @@ const FILE_MENU_ITEMS: Record<RedditFileData['type'], ReaderMenuItemId> = {
 export function useReader() {
   const [opened, setOpened] = useState<OpenedSource | null>(null)
   const [isReading, setIsReading] = useState(false)
-  const [error, setError] = useState('')
+  const [error, setError] = useState<unknown>(null)
   const [activeMenuItem, setActiveMenuItem] = useState<ReaderMenuItemId | null>(
     null,
   )
@@ -62,7 +62,7 @@ export function useReader() {
 
   async function openFile(file: File) {
     setIsReading(true)
-    setError('')
+    setError(null)
     try {
       const data = await readRedditSource(file)
       const files = createReaderFiles(data)
@@ -71,9 +71,8 @@ export function useReader() {
         files.find((item) => item.file.type === 'post-votes') ?? files[0]
       setActiveMenuItem(FILE_MENU_ITEMS[firstFile.file.type])
     } catch (cause) {
-      setError(
-        cause instanceof Error ? cause.message : 'Не удалось открыть файл.',
-      )
+      console.error(cause)
+      setError(cause)
     } finally {
       setIsReading(false)
     }

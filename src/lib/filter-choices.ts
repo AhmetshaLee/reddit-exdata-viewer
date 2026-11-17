@@ -10,9 +10,9 @@ export function getVoteChoices(
     else if (direction === 'down') downCount += 1
   }
   return [
-    { value: 'all', label: 'Все', count: directions.length },
-    { value: 'up', label: 'Нравится', count: upCount },
-    { value: 'down', label: 'Не нравится', count: downCount },
+    { value: 'all', label: '', count: directions.length },
+    { value: 'up', label: '', count: upCount },
+    { value: 'down', label: '', count: downCount },
   ]
 }
 
@@ -39,5 +39,5 @@ export function getCommunityChoices(
       sensitivity: 'base',
     })
   })
-  return [{ value: 'all', label: 'Все', count: records.length }, ...choices]
+  return [{ value: 'all', label: '', count: records.length }, ...choices]
 }

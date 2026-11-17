@@ -1,0 +1,115 @@
+export const ru = {
+  archiveTitle: 'Ваш архив Reddit',
+  votedPosts: 'Оценённые посты',
+  votedComments: 'Оценённые комментарии',
+  savedComments: 'Сохранённые комментарии',
+  savedPosts: 'Сохранённые посты',
+  hiddenPosts: 'Скрытые посты',
+  settingsTitle: 'Настройки Reddit',
+  statistics: 'Статистика',
+
+  posts: 'Посты',
+  comments: 'Комментарии',
+  mine: 'Мои',
+  ownPosts: 'Мои посты',
+  ownComments: 'Мои комментарии',
+  rated: 'Оценённые',
+  saved: 'Сохранённые',
+  hidden: 'Скрытые',
+  account: 'Аккаунт',
+  settings: 'Настройки',
+  other: 'Другое',
+  messages: 'Сообщения',
+  savedPostHint: 'Посты, которые вы сохранили',
+  savedCommentHint: 'Комментарии, которые вы сохранили',
+  ratedPostHint: 'Оценённые посты: нравится/не нравится',
+  ratedCommentHint: 'Оценённые комментарии: нравится/не нравится',
+  menuHint: 'Доступны данные из открытого файла',
+  menuEmptyHint: 'Пункты меню станут доступны после открытия CSV или ZIP',
+
+  theme: 'Тема страницы',
+  changeTheme: 'Сменить тему страницы',
+  light: 'С',
+  dark: 'Т',
+  reading: 'Чтение файла…',
+  localNote: 'Данные не покидают ваше устройство',
+  controls: 'Панель управления',
+  sections: 'Разделы архива',
+
+  intro: 'Откройте архив, чтобы просмотреть свои данные',
+  uploadTitle: 'Перетащите архив сюда',
+  dropFile: 'Отпустите файл, чтобы открыть',
+  singleFileOnly: 'Перетащите один CSV-файл или ZIP-архив за раз',
+  uploadDescription: 'или выберите файл на компьютере',
+  chooseArchive: 'Выбрать архив',
+  openFile: 'Открыть файл',
+  openedFile: 'Открытый файл',
+
+  toolbar: 'Панель поиска и фильтров',
+  search: 'Поиск',
+  filters: 'Фильтры',
+  reset: 'Сбросить',
+  communities: 'Сабреддиты',
+  votesTitle: 'Оценки',
+  all: 'Все',
+  unknownCommunity: 'Сабреддит не указан',
+  empty: 'По выбранным условиям ничего не найдено',
+  emptyPosts: 'В файле нет постов',
+  emptyComments: 'В файле нет комментариев',
+  emptyRecords: 'В файле нет записей',
+  searchPosts: 'Поиск по названию, ссылке или ID поста',
+  searchComments: 'Поиск по ID комментария, ссылке или названию поста',
+  searchProperties: 'Поиск по названию или значению',
+  missingBody: 'Текст комментария не включён в файл',
+
+  pagination: 'Пагинация',
+  previous: 'Предыдущая страница',
+  current: 'Текущая страница',
+  next: 'Следующая страница',
+  page: 'Страница',
+  of: 'из',
+
+  pageTitle: 'Просмотр архива данных Reddit',
+  description:
+    'Находите сохранённые и оценённые посты и комментарии в своём архиве Reddit с помощью поиска и фильтров. Файлы обрабатываются в браузере без отправки на сервер.',
+  footer: 'Просмотр данных Reddit на вашем устройстве',
+  footerNote: 'exdata [exported data] — экспортированные данные',
+  language: 'Язык интерфейса',
+
+  results: (found: number, total: number) => `Найдено: ${found} из ${total}`,
+  range: (first: number, last: number, total: number) =>
+    `Записи: ${first}–${last} из ${total}`,
+  postTitle: (id: string) => `Пост #${id}`,
+  commentTitle: (id: string) => `Комментарий #${id}`,
+  parentPost: (title: string) => `К посту: ${title}`,
+  yourVote: (label: string) => `Ваша оценка: ${label}`,
+  votes: { up: 'Нравится', down: 'Не нравится', none: 'Не указана' },
+
+  errors: {
+    unexpected: () => 'При открытии данных произошла непредвиденная ошибка.',
+    invalidCsv: () =>
+      'Не удалось разобрать CSV. Проверьте разделители и кавычки.',
+    invalidVote: () => 'В CSV есть запись без ID, ссылки или оценки.',
+    invalidLink: () => 'В CSV есть запись без ID или ссылки.',
+    invalidPreference: () =>
+      'В CSV есть запись без имени параметра или поля значения.',
+    invalidStatistic: () =>
+      'В CSV есть запись без названия показателя или поля значения.',
+    readFile: () => 'Не удалось прочитать файл. Выберите его ещё раз.',
+    openZip: () => 'Не удалось открыть ZIP-архив. Проверьте выбранный файл.',
+    columns: ([columns]: readonly string[]) =>
+      `Нужен CSV с колонками ${columns}.`,
+    selectSource: ([names]: readonly string[]) =>
+      `Выберите ${names} или ZIP-архив данных Reddit.`,
+    unsupported: ([name]: readonly string[]) =>
+      `Файл ${name} не поддерживается.`,
+    duplicate: ([name]: readonly string[]) =>
+      `В ZIP-архиве найдено несколько ${name}. Откройте нужный CSV отдельно.`,
+    noSupported: ([names]: readonly string[]) =>
+      `В ZIP-архиве не найдены поддерживаемые файлы: ${names}.`,
+    extract: ([name]: readonly string[]) =>
+      `Не удалось извлечь ${name} из ZIP-архива.`,
+    fileContext: ([name, detail]: readonly string[]) =>
+      `Файл ${name}: ${detail}`,
+  },
+}

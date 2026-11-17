@@ -1,5 +1,7 @@
 import Papa from 'papaparse'
 
+import { ReaderError } from './reader-error'
+
 export function parseCsv(
   text: string,
   required: string[],
@@ -11,16 +13,14 @@ export function parseCsv(
     dynamicTyping: false,
   })
   if (result.errors.length > 0) {
-    throw new Error(
-      'Не удалось разобрать CSV. Проверьте разделители и кавычки.',
-    )
+    throw new ReaderError('invalidCsv')
   }
   const columns = result.meta.fields ?? []
   if (
     columns.length !== required.length ||
     !required.every((name) => columns.includes(name))
   ) {
-    throw new Error('Нужен CSV с колонками ' + required.join(', ') + '.')
+    throw new ReaderError('columns', [required.join(', ')])
   }
   return result.data
 }

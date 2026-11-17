@@ -11,29 +11,36 @@
   --color-banner: #ababb5;
   --color-surface: #4e4c58;
   --color-surface-recessed: #34343c;
-  --color-heading: #696773;
-  --color-surface-inset: #e5e5ed;
-  --color-control-disabled: #dfdfe8;
+  --color-heading-background: #5e5e6a;
+  --color-surface-content: #e5e5ed;
 
   /* Текст */
   --color-text: #32323e;
+  --color-text-muted: #656571;
   --color-text-disabled: #83838e;
   --color-banner-text: #454550;
-  --color-panel-text: #fafafd;
-  --color-on-accent: #ffffff;
+  --color-text-light: #fafafd;
+  --color-menu-text: #c5c5cf;
 
   /* Акценты и границы */
-  --color-accent: #696975;
+  --color-accent: #6e6e7a;
   --color-focus: #5e5e70;
   --color-border-strong: #9696a3;
+
+  /* Элементы управления */
+  --color-control-background: #ceced9;
+  --color-control-text: var(--color-text);
+  --color-control-disabled-background: #5b5b67;
+  --color-control-disabled-text: #aaaab6;
 
   /* Тени */
   --shadow-panel: 0 4px 12px rgb(48 48 60 / 7%);
 
   /* Скругления */
   --radius-small: 2px;
-  --radius-panel: 12px;
   --radius-control: 6px;
+  --radius-panel: 8px;
+  --radius-panel-large: 12px;
 
   /* Макет и отступы */
   --content-width: 980px;
@@ -49,19 +56,23 @@
   --color-banner: #676773;
   --color-surface: #363641;
   --color-surface-recessed: #24242b;
-  --color-heading: #696975;
-  --color-surface-inset: #4e4e59;
-  --color-control-disabled: #555560;
+  --color-surface-content: #4e4e59;
 
   /* Текст */
   --color-text: #f2f2f6;
+  --color-text-muted: #c0c0cc;
   --color-text-disabled: #a1a1ad;
+  --color-menu-text: #ccccd6;
   --color-banner-text: #f1f1f5;
 
   /* Акценты и границы */
-  --color-accent: #72727e;
   --color-focus: #cccce0;
   --color-border-strong: #8a8a99;
+
+  /* Элементы управления */
+  --color-control-background: #41414d;
+  --color-control-disabled-background: #43434f;
+  --color-control-disabled-text: #9494a2;
 
   /* Тени */
   --shadow-panel: 0 4px 12px rgb(18 18 24 / 16%);

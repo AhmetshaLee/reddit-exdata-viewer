@@ -1,5 +1,11 @@
 # reddit-exdata-viewer
 
+## Open the App
+
+Choose your interface language:
+
+**[Русский](https://ahmetshalee.github.io/reddit-exdata-viewer/)** · **[English](https://ahmetshalee.github.io/reddit-exdata-viewer/en/)**
+
 ## About
 
 A local viewer for personal Reddit data exports. **Exdata** stands for **exported data**.

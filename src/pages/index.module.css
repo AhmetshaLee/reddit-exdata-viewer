@@ -6,11 +6,6 @@
   background-color: var(--color-banner);
 }
 
-.bannerPlaceholder {
-  color: var(--color-banner-text);
-  font-size: 14px;
-}
-
 .container {
   width: 100%;
   max-width: var(--content-width);
@@ -29,27 +24,36 @@
 .main {
   grid-area: main;
   padding: 20px 16px 24px;
-  border-radius: var(--radius-panel);
-  color: var(--color-panel-text);
+  border-radius: var(--radius-panel-large);
+  color: var(--color-text-light);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-panel);
 }
 
 .title {
   padding: 6px 32px;
-  border-radius: 3px;
-  background-color: var(--color-heading);
+  border-radius: var(--radius-small);
+  background-color: var(--color-heading-background);
   font-size: 28px;
   line-height: 1.4;
 }
 
-.intro {
+.uploadIntro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: start;
+  gap: 16px;
   margin: 24px 48px;
+}
+
+.intro {
+  min-width: 0;
+  line-height: 1.5;
 }
 
 .dropZone {
   --drop-zone-radius: 18px;
-  --drop-zone-inset: 10px;
+  --drop-zone-inset: 12px;
 
   position: relative;
   display: flex;
@@ -61,7 +65,7 @@
   padding: 32px;
   border-radius: var(--drop-zone-radius);
   color: var(--color-text);
-  background-color: var(--color-surface-inset);
+  background-color: var(--color-surface-content);
   text-align: center;
 }
 
@@ -79,6 +83,15 @@
   line-height: 1.4;
 }
 
+.dropZone[data-dragging='true']::before {
+  border-color: var(--color-focus);
+  border-style: solid;
+}
+
+.dropError {
+  margin-top: 16px;
+}
+
 .uploadDescription {
   margin-block: 8px 24px;
 }
@@ -88,7 +101,7 @@
   padding: 12px 28px;
   border: 1px solid transparent;
   border-radius: var(--radius-control);
-  color: var(--color-on-accent);
+  color: var(--color-text-light);
   background-color: var(--color-accent);
   font-weight: 700;
 }
@@ -101,12 +114,11 @@
 
 .sidebar {
   position: sticky;
-  top: 0;
+  top: 16px;
   grid-area: aside;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding-top: 16px;
 }
 
 .sidebarPanel {
@@ -114,7 +126,7 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   padding: 16px 8px;
-  border-radius: 8px;
+  border-radius: var(--radius-panel);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-panel);
 }
@@ -125,7 +137,7 @@
   justify-content: space-between;
   gap: 8px;
   padding-inline: 8px;
-  color: var(--color-panel-text);
+  color: var(--color-text-light);
   font-size: 14px;
 }
 
@@ -141,7 +153,7 @@
   padding: 0;
   border: 0;
   border-radius: var(--radius-control);
-  color: var(--color-on-accent);
+  color: var(--color-text-light);
   background-color: var(--color-accent);
   font-weight: 700;
 }
@@ -170,11 +182,15 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
+.menu {
+  gap: 6px;
+}
+
 .menuGroupTitle {
   display: block;
   padding: 6px 8px;
-  color: var(--color-panel-text);
-  background-color: var(--color-accent);
+  color: var(--color-text-light);
+  background-color: var(--color-heading-background);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -187,39 +203,54 @@
   display: none;
 }
 
-.menuItems > li:nth-child(even) .menuButton {
-  background-color: var(--color-control-disabled);
-}
-
 .menuButton {
   display: block;
   width: 100%;
   height: 36px;
-  padding: 0 8px;
+  padding: 0 20px 0 16px;
   overflow: hidden;
   border: 0;
+  border-right: 5px solid transparent;
   color: var(--color-text-disabled);
-  background-color: var(--color-surface-inset);
-  font-size: 16px;
-  font-weight: 700;
+  background-color: transparent;
+  font-size: 15px;
+  font-weight: 600;
   line-height: 1.2;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.themeButton:disabled,
+.uploadButton:disabled,
+.themeButton:disabled {
+  color: var(--color-control-disabled-text);
+  background-color: var(--color-control-disabled-background);
+  cursor: not-allowed;
+}
+
 .menuButton:disabled {
   cursor: not-allowed;
 }
 
-.menuButton:not(:disabled) {
-  color: var(--color-text);
+.menuItems {
+  padding-block: 6px;
+  background-color: var(--color-surface-recessed);
 }
 
-.menuButton:not(:disabled):hover,
+.menuButton:not(:disabled) {
+  color: var(--color-menu-text);
+}
+
 .menuButton[aria-current='true'] {
-  text-decoration: underline;
+  color: var(--color-text-light);
+  border-right-color: var(--color-text-light);
+  background-color: var(--color-surface-recessed);
+  text-decoration: none;
+}
+
+.menuButton:focus-visible {
+  outline-color: var(--color-text-light);
+  outline-offset: -4px;
 }
 
 .footer {

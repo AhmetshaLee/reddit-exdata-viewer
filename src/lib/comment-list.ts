@@ -18,7 +18,7 @@ export function prepareComments(
   return records.map((record, sourceIndex) => {
     const link = getRedditPostLink(record.permalink)
     const subreddit = link?.subreddit
-    const communityLabel = subreddit ? 'r/' + subreddit : 'Сабреддит не указан'
+    const communityLabel = subreddit ? 'r/' + subreddit : ''
     return {
       record,
       sourceIndex,

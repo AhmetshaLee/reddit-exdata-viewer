@@ -1,22 +1,30 @@
 import type { CommentEntry } from '../lib/comment-list'
-import { getVoteLabel } from '../lib/votes'
+import { getVoteLabel, type Messages } from '../i18n'
 import styles from './comments.module.css'
 
-export default function CommentCard({ entry }: { entry: CommentEntry }) {
+export default function CommentCard({
+  entry,
+  text,
+}: {
+  entry: CommentEntry
+  text: Messages
+}) {
   const { record, href, communityLabel, parentTitle } = entry
   const content = (
     <>
-      <p className={styles.community}>{communityLabel}</p>
-      <h2 className={styles.title}>Комментарий #{record.id}</h2>
-      <p className={styles.description}>Текст комментария не включён в файл</p>
+      <p className={styles.community}>
+        {communityLabel || text.unknownCommunity}
+      </p>
+      <h2 className={styles.title}>{text.commentTitle(record.id)}</h2>
+      <p className={styles.description}>{text.missingBody}</p>
       {parentTitle && (
         <p className={styles.parent} title={parentTitle}>
-          К публикации: {parentTitle}
+          {text.parentPost(parentTitle)}
         </p>
       )}
       {'direction' in record && (
         <p className={styles.direction}>
-          Ваша оценка: {getVoteLabel(record.direction)}
+          {text.yourVote(getVoteLabel(record.direction, text))}
         </p>
       )}
     </>

@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react'
 
+import type { Messages } from '../i18n'
 import styles from '../pages/index.module.css'
 
 type ReaderLayoutProps = {
+  text: Messages
   title: string
   children: ReactNode
   menu: ReactNode
@@ -10,6 +12,7 @@ type ReaderLayoutProps = {
 }
 
 export default function ReaderLayout({
+  text,
   title,
   children,
   menu,
@@ -20,10 +23,10 @@ export default function ReaderLayout({
       <main className={styles.main}>
         <h1 className={styles.title}>{title}</h1>
         {children}
-        <p className={styles.localNote}>Данные не покидают ваше устройство</p>
+        <p className={styles.localNote}>{text.localNote}</p>
       </main>
 
-      <aside className={styles.sidebar} aria-label="Панель управления">
+      <aside className={styles.sidebar} aria-label={text.controls}>
         {menu}
         {pagination}
       </aside>

@@ -1,3 +1,4 @@
+import { getVoteLabel, type Messages } from '../i18n'
 import type { CommentEntry } from '../lib/comment-list'
 import type { ListFilters } from '../lib/list-filters'
 import type { FilterChoice } from '../lib/filter-choices'
@@ -7,6 +8,7 @@ import ReaderListFrame from './ReaderListFrame'
 import styles from './comments.module.css'
 
 type CommentListViewProps = {
+  text: Messages
   title: string
   query: string
   onQueryChange: (query: string) => void
@@ -25,6 +27,7 @@ type CommentListViewProps = {
 }
 
 export default function CommentListView({
+  text,
   title,
   query,
   onQueryChange,
@@ -44,8 +47,14 @@ export default function CommentListView({
   const groups: ReaderFilterGroup[] = [
     {
       name: 'community',
-      legend: 'Сабреддиты',
-      choices: communityChoices,
+      legend: text.communities,
+      choices: communityChoices.map((choice) => ({
+        ...choice,
+        label:
+          choice.value === 'all'
+            ? text.all
+            : choice.label || text.unknownCommunity,
+      })),
       selected: filters.community,
       onChange: (community) => onFiltersChange({ ...filters, community }),
     },
@@ -53,8 +62,12 @@ export default function CommentListView({
   if (voteChoices) {
     groups.unshift({
       name: 'direction',
-      legend: 'Оценки',
-      choices: voteChoices,
+      legend: text.votesTitle,
+      choices: voteChoices.map((choice) => ({
+        ...choice,
+        label:
+          choice.value === 'all' ? text.all : getVoteLabel(choice.value, text),
+      })),
       selected: filters.direction ?? 'all',
       onChange: (direction) => onFiltersChange({ ...filters, direction }),
     })
@@ -62,13 +75,15 @@ export default function CommentListView({
 
   return (
     <ReaderListFrame
+      text={text}
       totalRecords={totalRecords}
       matchedRecords={matchedRecords}
-      emptyMessage="В файле нет комментариев"
+      emptyMessage={text.emptyComments}
       toolbar={
         <ReaderToolbar
+          text={text}
           search={{ query, onChange: onQueryChange }}
-          searchPlaceholder="Поиск по ID, ссылке или названию публикации"
+          searchPlaceholder={text.searchComments}
           groups={groups}
           onReset={onReset}
           fileName={fileName}
@@ -81,7 +96,7 @@ export default function CommentListView({
     >
       <ol className={styles.cards} aria-label={title} start={start + 1}>
         {pageRecords.map((entry) => (
-          <CommentCard key={entry.sourceIndex} entry={entry} />
+          <CommentCard text={text} key={entry.sourceIndex} entry={entry} />
         ))}
       </ol>
     </ReaderListFrame>

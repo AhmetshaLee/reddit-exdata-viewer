@@ -9,7 +9,7 @@
   gap: 8px;
   padding: 12px;
   border-radius: var(--radius-small);
-  background-color: var(--color-surface-inset);
+  background-color: var(--color-surface-content);
   color: var(--color-text);
   text-decoration: none;
   overflow-wrap: anywhere;

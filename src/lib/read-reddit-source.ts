@@ -1,5 +1,6 @@
 import { unzipRaw, type ZipEntry, type ZipInfoRaw } from 'unzipit'
 
+import { ReaderError } from './reader-error'
 import { parseVotes, type VoteRecord } from './votes'
 import { parseLinkRecords, type LinkRecord } from './link-records'
 import { parseUserPreferences, type UserPreference } from './user-preferences'
@@ -30,8 +31,8 @@ export async function readRedditSource(file: File): Promise<RedditFileData[]> {
     let text: string
     try {
       text = await file.text()
-    } catch {
-      throw new Error('Не удалось прочитать файл. Выберите его ещё раз.')
+    } catch (cause) {
+      throw new ReaderError('readFile', [], { cause })
     }
     return [parseRedditFile(name, text)]
   }
@@ -39,9 +40,7 @@ export async function readRedditSource(file: File): Promise<RedditFileData[]> {
     return readArchive(file)
   }
 
-  throw new Error(
-    `Выберите ${SUPPORTED_CSV_FILES.join(', ')} или ZIP-архив выгрузки Reddit.`,
-  )
+  throw new ReaderError('selectSource', [SUPPORTED_CSV_FILES.join(', ')])
 }
 
 function parseRedditFile(name: string, text: string): RedditFileData {
@@ -61,7 +60,7 @@ function parseRedditFile(name: string, text: string): RedditFileData {
     case 'statistics.csv':
       return { type: 'statistics', records: parseStatistics(text) }
     default:
-      throw new Error(`Файл ${name} не поддерживается.`)
+      throw new ReaderError('unsupported', [name])
   }
 }
 
@@ -69,8 +68,8 @@ async function readArchive(file: File): Promise<RedditFileData[]> {
   let archive: ZipInfoRaw
   try {
     archive = await unzipRaw(file)
-  } catch {
-    throw new Error('Не удалось открыть ZIP-архив. Проверьте выбранный файл.')
+  } catch (cause) {
+    throw new ReaderError('openZip', [], { cause })
   }
 
   const entries: ZipEntry[] = []
@@ -78,16 +77,12 @@ async function readArchive(file: File): Promise<RedditFileData[]> {
     const name = entry.name.toLowerCase()
     if (!SUPPORTED_CSV_FILES.includes(name)) continue
     if (entries.some((selected) => selected.name.toLowerCase() === name)) {
-      throw new Error(
-        `В ZIP-архиве найдено несколько ${name}. Откройте нужный CSV отдельно.`,
-      )
+      throw new ReaderError('duplicate', [name])
     }
     entries.push(entry)
   }
   if (entries.length === 0) {
-    throw new Error(
-      `В ZIP-архиве не найдены поддерживаемые файлы: ${SUPPORTED_CSV_FILES.join(', ')}.`,
-    )
+    throw new ReaderError('noSupported', [SUPPORTED_CSV_FILES.join(', ')])
   }
 
   return Promise.all(
@@ -95,15 +90,13 @@ async function readArchive(file: File): Promise<RedditFileData[]> {
       let text: string
       try {
         text = await entry.text()
-      } catch {
-        throw new Error(`Не удалось извлечь ${entry.name} из ZIP-архива.`)
+      } catch (cause) {
+        throw new ReaderError('extract', [entry.name], { cause })
       }
       try {
         return parseRedditFile(entry.name.toLowerCase(), text)
       } catch (cause) {
-        const message =
-          cause instanceof Error ? cause.message : 'Не удалось разобрать CSV.'
-        throw new Error(`Файл ${entry.name}: ${message}`, { cause })
+        throw new ReaderError('fileContext', [entry.name], { cause })
       }
     }),
   )
